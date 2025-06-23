@@ -263,29 +263,6 @@ const Dashboard = () => {
     window.location.reload();
   };
 
-  // Health check function
-  const handleHealthCheck = async () => {
-    try {
-      const healthData = await healthCheck();
-      console.log('Health Check Data:', healthData);
-      alert(JSON.stringify(healthData, null, 2));
-    } catch (error) {
-      console.error('Health check failed:', error);
-      alert('Health check failed: ' + error);
-    }
-  };
-
-  // Debug function to check session
-  const handleDebugSession = async () => {
-    try {
-      const sessionData = await debugSession();
-      console.log('Session Debug Data:', sessionData);
-      alert(JSON.stringify(sessionData, null, 2));
-    } catch (error) {
-      console.error('Debug session failed:', error);
-      alert('Debug session failed: ' + error);
-    }
-  };
 
   // Function to handle user modal opening
   const handleOpenUserModal = async () => {
@@ -413,20 +390,7 @@ const Dashboard = () => {
               <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingMetrics ? 'animate-spin' : ''}`} />
               {isLoadingMetrics ? 'Loading...' : (isAuthenticated ? 'Refresh Citations' : 'Refresh Demo Data')}
             </Button>
-            <Button
-              variant="outline"
-              className="flex items-center"
-              onClick={handleHealthCheck}
-            >
-              Health Check
-            </Button>
-            <Button
-              variant="outline"
-              className="flex items-center"
-              onClick={handleDebugSession}
-            >
-              Debug Session
-            </Button>
+           
             <Button
               variant="outline"
               className="flex items-center"
