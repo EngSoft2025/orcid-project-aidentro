@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Bell,
   Book,
   ChevronDown,
   LogIn,
@@ -44,8 +43,6 @@ const Navbar = () => {
 
   const resourcesDropdownItems = [
     { name: "FAQs", href: "/resources/faqs" },
-    { name: "Tutorials", href: "/resources/tutorials" },
-    { name: "Templates", href: "/resources/templates" },
   ];
 
   // Load user identity on component mount
@@ -73,7 +70,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/home" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-full bg-orcid-green flex items-center justify-center">
               <span className="font-bold text-white">ID</span>
             </div>
@@ -151,12 +148,6 @@ const Navbar = () => {
 
             {isLoggedIn ? (
               <>
-                <Link
-                  to="/notifications"
-                  className="text-gray-600 hover:text-orcid-green"
-                >
-                  <Bell className="h-5 w-5" />
-                </Link>
                 <div className="hidden sm:flex items-center space-x-2">
                   {/* User Profile Modal Button */}
                   <Button 

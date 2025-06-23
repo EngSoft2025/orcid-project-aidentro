@@ -8,7 +8,6 @@ import SignIn from "./pages/SignIn";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
-import DashboardSocial from "./pages/DashboardSocial";
 import Search from "./pages/Search";
 import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
@@ -27,14 +26,15 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard-social" element={<DashboardSocial />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/connections" element={<Home />} />
           
           {/* Auth callback routes */}
           <Route path="/auth/success" element={<AuthSuccess />} />
