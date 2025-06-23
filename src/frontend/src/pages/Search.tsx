@@ -40,7 +40,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group";
-
+import AddFollowModal from "@/components/dashboard/AddFollowModal";
 
 // Import new utilities for ORCID integration
 import { buildORCIDQuery, applyClientSideFilters } from "@/utils/orcidQueryBuilder";
@@ -63,6 +63,9 @@ const Search = () => {
   const [totalResults, setTotalResults] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const [showAddFollowModal, setShowAddFollowModal] = useState(false);
+  const [selectedResearcher, setSelectedResearcher] = useState<any>(null);
+  const [addingFollow, setAddingFollow] = useState(false);
 
   // Lista de áreas de especialidade para o filtro
   const expertiseAreas = [
@@ -232,17 +235,27 @@ const Search = () => {
     }
   };
 
-  const handleFollow = async (researcher: any) => {
+  const handleFollow = (researcher: any) => {
+    setSelectedResearcher(researcher);
+    setShowAddFollowModal(true);
+  };
+
+  const handleSubmitFollow = async () => {
+    if (!selectedResearcher) return;
     const myOrcidId = getStoredOrcidId();
     if (!myOrcidId) {
-      toast.error("You must be logged in with ORCID to follow researchers.");
-      return;
+      throw new Error("You must be logged in with ORCID to follow researchers.");
     }
+    setAddingFollow(true);
     try {
-      await followResearcher(myOrcidId, researcher.orcidId);
-      toast.success(`Now following ${researcher.name}`);
+      await followResearcher(myOrcidId, selectedResearcher.orcidId);
+      toast.success(`Now following ${selectedResearcher.name}`);
     } catch (err: any) {
-      toast.error(err.message || `Failed to follow ${researcher.name}`);
+      throw err;
+    } finally {
+      setAddingFollow(false);
+      setShowAddFollowModal(false);
+      setSelectedResearcher(null);
     }
   };
 
@@ -668,6 +681,17 @@ const Search = () => {
             </p>
           </div>
         )}
+
+        <AddFollowModal
+          isOpen={showAddFollowModal}
+          onClose={() => {
+            setShowAddFollowModal(false);
+            setSelectedResearcher(null);
+          }}
+          onSubmit={handleSubmitFollow}
+          isLoading={addingFollow}
+          researcherName={selectedResearcher?.name || ""}
+        />
       </div>
     </Layout>
   );
