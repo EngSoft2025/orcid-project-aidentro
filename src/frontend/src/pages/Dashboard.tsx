@@ -434,9 +434,11 @@ const Dashboard = () => {
                   </Link>
                 </li>
                 <li className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                  <Link to="/profile/edit" className="text-gray-800 hover:text-orcid-green">
-                    Add social media links to your profile
-                  </Link>
+                  <div className="text-sm text-gray-600">
+                    <Link to="/dashboard" className="text-gray-800 hover:text-orcid-green">
+                      Add social media links to your profile
+                    </Link>
+                  </div>
                 </li>
                 {isAuthenticated && !loadingCitations && !citationMetrics && (
                   <li className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">

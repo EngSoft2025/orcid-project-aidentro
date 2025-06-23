@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -412,7 +411,7 @@ const Search = () => {
                           <AvatarFallback>{researcher.name.substring(0, 2)}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <Link to={`/profile/${researcher.id}`}>
+                          <Link to="/dashboard">
                             <CardTitle className="text-lg hover:text-orcid-green">
                               {researcher.name}
                             </CardTitle>
@@ -466,7 +465,7 @@ const Search = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="bg-gray-50 border-t pt-3 pb-3 flex justify-between">
-                    <Link to={`/profile/${researcher.id}`}>
+                    <Link to="/dashboard">
                       <Button variant="ghost" size="sm">View Profile</Button>
                     </Link>
                     <Button 

@@ -159,7 +159,7 @@ const Home = () => {
                   <p className="text-gray-600 mb-6 flex-grow">
                     Acesse e edite seu perfil ORCID, publicações, afiliações e outras informações profissionais.
                   </p>
-                  <Link to="/profile" className="mt-auto">
+                  <Link to="/dashboard" className="mt-auto">
                     <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
                       <User className="h-4 w-4 mr-2" />
                       Acessar Perfil
@@ -245,7 +245,7 @@ const Home = () => {
                 </Button>
               </Link>
               
-              <Link to="/profile" className="w-full sm:w-auto">
+              <Link to="/dashboard" className="w-full sm:w-auto">
                 <Button variant="outline" className="w-full sm:w-auto border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white">
                   <User className="h-4 w-4 mr-2" />
                   Meu Perfil
