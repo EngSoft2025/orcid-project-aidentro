@@ -69,8 +69,6 @@ const Home = () => {
     );
   }
 
-  // Show content for both authenticated and non-authenticated users
-
   return (
     <Layout>
       <div className="min-h-screen bg-gray-50">
