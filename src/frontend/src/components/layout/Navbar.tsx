@@ -72,7 +72,7 @@ const Navbar = () => {
     localStorage.removeItem("orcid_access_token");
     localStorage.removeItem("orcid_id");
     toast.success("Signed out successfully");
-    navigate("/signin");
+    navigate("/home");
   };
 
   return (
