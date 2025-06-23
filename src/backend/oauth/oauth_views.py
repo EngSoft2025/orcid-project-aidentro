@@ -1398,3 +1398,70 @@ def get_social_media_accounts(request):
             'error': 'Failed to retrieve social media accounts',
             'details': str(e)
         }, status=500) 
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def follow_researcher(request):
+    """
+    Adiciona um ORCID ID à lista de following do usuário autenticado.
+    POST body (JSON):
+    {
+        "orcid_id": "0000-0000-0000-0000",  # do usuário autenticado
+        "follow_orcid_id": "0000-0000-0000-0000"  # ORCID ID a ser seguido
+    }
+    """
+    try:
+        data = json.loads(request.body)
+        orcid_id = data.get("orcid_id")
+        follow_orcid_id = data.get("follow_orcid_id")
+        if not orcid_id or not follow_orcid_id:
+            return JsonResponse({"error": "orcid_id e follow_orcid_id são obrigatórios."}, status=400)
+        if orcid_id == follow_orcid_id:
+            return JsonResponse({"error": "Você não pode seguir a si mesmo."}, status=400)
+        # Validação básica de formato
+        if not ORCIDAPIClient.validate_orcid_id_format(follow_orcid_id):
+            return JsonResponse({"error": "Formato de ORCID ID inválido para follow_orcid_id."}, status=400)
+        try:
+            user = User.objects.get(orcid_id=orcid_id)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "Usuário autenticado não encontrado."}, status=404)
+        following = user.following or []
+        if follow_orcid_id in following:
+            return JsonResponse({"error": "Você já está seguindo este ORCID ID."}, status=400)
+        following.append(follow_orcid_id)
+        user.following = following
+        user.save()
+        return JsonResponse({"success": True, "following": user.following})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def unfollow_researcher(request):
+    """
+    Remove um ORCID ID da lista de following do usuário autenticado.
+    POST body (JSON):
+    {
+        "orcid_id": "0000-0000-0000-0000",  # do usuário autenticado
+        "unfollow_orcid_id": "0000-0000-0000-0000"  # ORCID ID a ser removido
+    }
+    """
+    try:
+        data = json.loads(request.body)
+        orcid_id = data.get("orcid_id")
+        unfollow_orcid_id = data.get("unfollow_orcid_id")
+        if not orcid_id or not unfollow_orcid_id:
+            return JsonResponse({"error": "orcid_id e unfollow_orcid_id são obrigatórios."}, status=400)
+        try:
+            user = User.objects.get(orcid_id=orcid_id)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "Usuário autenticado não encontrado."}, status=404)
+        following = user.following or []
+        if unfollow_orcid_id not in following:
+            return JsonResponse({"error": "Você não está seguindo este ORCID ID."}, status=400)
+        following.remove(unfollow_orcid_id)
+        user.following = following
+        user.save()
+        return JsonResponse({"success": True, "following": user.following})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500) 

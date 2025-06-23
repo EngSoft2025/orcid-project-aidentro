@@ -7,7 +7,7 @@ Nosso objetivo é desenvolver uma aplicação baseada na [API pública do ORCID]
 ## Website
 
 O projeto está atualmente disponível num [link público](https://aidentro.vercel.app/), com o front-end deployado na Vercel e o Back-end deployado no Render.
-
+ 
 ## 📁 Estrutura do Repositório
 
 | Pasta / Arquivo             | Descrição |

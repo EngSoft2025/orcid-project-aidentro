@@ -603,4 +603,80 @@ export const addSocialMediaAccount = async (orcidId: string, platform: string, u
     console.error('❌ Error adding social media account:', error);
     throw error;
   }
+};
+
+export interface FollowResearcherResponse {
+  success: boolean;
+  following: string[];
+  error?: string;
+}
+
+export const followResearcher = async (orcidId: string, followOrcidId: string): Promise<FollowResearcherResponse> => {
+  const response = await fetch(`${BACKEND_URL}/api/follow-researcher/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ orcid_id: orcidId, follow_orcid_id: followOrcidId }),
+    credentials: 'include',
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || 'Failed to follow researcher');
+  }
+  return data;
+};
+
+export const getFollowing = async (): Promise<string[]> => {
+  const response = await fetch(`${BACKEND_URL}/api/current-user-identity/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch user identity');
+  }
+  const data = await response.json();
+  if (!data.success || !data.user_identity) {
+    throw new Error('User identity not found');
+  }
+  return data.user_identity.following || [];
+};
+
+export const getResearchersByOrcidIds = async (orcidIds: string[]) => {
+  if (!orcidIds.length) return [];
+  // Monta query ORCID: orcid:ID1 OR orcid:ID2 ...
+  const q = orcidIds.map(id => `orcid:${id}`).join(' OR ');
+  const response = await fetch(`${BACKEND_URL}/api/search-researchers/?q=${encodeURIComponent(q)}&rows=${orcidIds.length}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch researchers');
+  }
+  const data = await response.json();
+  if (!data.success || !data.search_results || !data.search_results.results) {
+    return [];
+  }
+  return data.search_results.results.map((r: any) => ({
+    orcidId: r.orcid_id,
+    name: r.display_name,
+    avatarUrl: '', // ORCID API não retorna avatar
+    institutionName: r.current_affiliation || ''
+  }));
+};
+
+export const unfollowResearcher = async (orcidId: string, unfollowOrcidId: string): Promise<FollowResearcherResponse> => {
+  const response = await fetch(`${BACKEND_URL}/api/unfollow-researcher/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ orcid_id: orcidId, unfollow_orcid_id: unfollowOrcidId }),
+    credentials: 'include',
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || 'Failed to unfollow researcher');
+  }
+  return data;
 }; 

@@ -83,3 +83,10 @@ export interface CitationAnalysis {
   analysisPeriod: string;
   error?: string;
 }
+
+export interface FollowingResearcher {
+  orcidId: string;
+  name?: string;
+  avatarUrl?: string;
+  institutionName?: string;
+}

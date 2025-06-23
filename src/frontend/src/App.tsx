@@ -16,6 +16,7 @@ import OrcidTest from "./pages/OrcidTest";
 import CitationTestDashboard from "./pages/CitationTestDashboard";
 import DebugBanner from "@/components/ui/debug-banner";
 import FAQ from "./pages/FAQ";
+import Connections from "./pages/Connections";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => (
           <Route path="/FAQ" element={<FAQ />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/connections" element={<Connections />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

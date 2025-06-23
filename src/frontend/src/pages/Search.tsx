@@ -44,7 +44,8 @@ import {
 
 // Import new utilities for ORCID integration
 import { buildORCIDQuery, applyClientSideFilters } from "@/utils/orcidQueryBuilder";
-import { searchResearchers, SearchResearchersResponse } from "@/api/orcidApi";
+import { searchResearchers, SearchResearchersResponse, followResearcher } from "@/api/orcidApi";
+import { getStoredOrcidId } from "@/utils/orcidAuth";
 
 const Search = () => {
   const [query, setQuery] = useState("");
@@ -231,10 +232,18 @@ const Search = () => {
     }
   };
 
-
-
-  const handleFollow = (researcher: any) => {
-    toast.success(`Now following ${researcher.name}`);
+  const handleFollow = async (researcher: any) => {
+    const myOrcidId = getStoredOrcidId();
+    if (!myOrcidId) {
+      toast.error("You must be logged in with ORCID to follow researchers.");
+      return;
+    }
+    try {
+      await followResearcher(myOrcidId, researcher.orcidId);
+      toast.success(`Now following ${researcher.name}`);
+    } catch (err: any) {
+      toast.error(err.message || `Failed to follow ${researcher.name}`);
+    }
   };
 
   const toggleExpertise = (area: string) => {

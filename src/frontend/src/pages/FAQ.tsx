@@ -27,7 +27,8 @@ import {
   FileText,
   Globe,
   Mail,
-  Phone
+  Phone,
+  LogOut
 } from "lucide-react";
 
 const FAQ = () => {

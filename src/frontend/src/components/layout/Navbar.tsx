@@ -35,7 +35,7 @@ const Navbar = () => {
   const [mobileResearchersOpen, setMobileResearchersOpen] = useState(false)
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
   const [userIdentity, setUserIdentity] = useState<UserIdentity | null>(null)
-  const isLoggedIn = isDebugMode() ? true : isOrcidAuthenticated()
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const mainNavItems = [
     { name: "Membership", href: "https://info.orcid.org/membership/", external: true },
@@ -51,6 +51,18 @@ const Navbar = () => {
     { name: "Benefits", href: "https://info.orcid.org/researcher-faq/", external: true },
     { name: "Tools", href: "https://info.orcid.org/video-tutorials/", external: true },
   ]
+
+  useEffect(() => {
+    // Função para checar autenticação via localStorage
+    const checkAuth = () => {
+      const orcidId = localStorage.getItem('orcid_id');
+      const isAuthenticated = localStorage.getItem('orcid_authenticated') === 'true';
+      setIsLoggedIn(!!(orcidId && isAuthenticated));
+    };
+    checkAuth();
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -206,14 +218,6 @@ const Navbar = () => {
                 <LogOut className="h-5 w-5 text-gray-600 hover:text-orcid-green" />
               </Button>
             </>
-          )}
-
-          {!isLoggedIn && (
-            <Link to="/login">
-              <Button variant="ghost" size="icon" className="p-2" title="Login">
-                <LogIn className="h-5 w-5 text-gray-600 hover:text-orcid-green" />
-              </Button>
-            </Link>
           )}
 
           {/* mobile toggle */}
