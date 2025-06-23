@@ -19,7 +19,7 @@ const AuthError: React.FC = () => {
   }, [searchParams]);
 
   const handleTryAgain = () => {
-    navigate('/signin');
+    // navigate('/signin');
   };
 
   const handleGoHome = () => {

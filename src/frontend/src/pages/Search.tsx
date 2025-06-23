@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { institutions } from "@/data/mockData";
+import { countries, institutions } from "@/data/mockData";
 import { Researcher } from "@/types";
 import { Book, Filter, Search as SearchIcon, SlidersHorizontal, UserPlus } from "lucide-react";
 import { toast } from "sonner";
@@ -50,6 +50,7 @@ const Search = () => {
   const [query, setQuery] = useState("");
   const [nameQuery, setNameQuery] = useState("");
   const [institution, setInstitution] = useState("");
+  const [country, setCountry] = useState("");
   const [expertise, setExpertise] = useState<string[]>([]);
   const [minPublications, setMinPublications] = useState(0);
   const [minCitations, setMinCitations] = useState(0);
@@ -135,6 +136,7 @@ const Search = () => {
       const orcidQuery = buildORCIDQuery({
         query: combinedQuery,
         institution: institution !== "any" ? institution : undefined,
+        country: country !== "any" ? country : undefined,
         expertise: expertise.length > 0 ? expertise : undefined,
         minPublications,
         minCitations,
@@ -245,6 +247,7 @@ const Search = () => {
 
   const clearFilters = () => {
     setInstitution("");
+    setCountry("");
     setExpertise([]);
     setMinPublications(0);
     setMinCitations(0);
@@ -267,7 +270,7 @@ const Search = () => {
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Find Researchers</h1>
 
         <div className="bg-white rounded-2xl shadow-md p-6 mb-8">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-4">
             <div className="md:col-span-2 relative">
               <Input
                 placeholder="Search researchers, institutions, or topics (e.g., 'Machine Learning', 'family-name:Smith')"
@@ -310,7 +313,19 @@ const Search = () => {
               </SelectContent>
             </Select>
 
-
+            <Select value={country} onValueChange={setCountry}>
+              <SelectTrigger>
+                <SelectValue placeholder="Country (any)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">Any country</SelectItem>
+                {countries.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    {c.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Search by Name Section */}
@@ -638,7 +653,7 @@ const Search = () => {
               Search for researchers
             </h2>
             <p className="text-gray-600 max-w-md mx-auto">
-              Find researchers by name, institution, or research area.
+              Find researchers by name, institution, research area, or country.
               <br />
               You can also use advanced ORCID syntax like "family-name:Smith" or "affiliation-org-name:University".
             </p>

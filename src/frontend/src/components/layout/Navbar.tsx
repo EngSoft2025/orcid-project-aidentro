@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import UserInfoModal from "@/components/UserInfoModal";
-import { getCurrentUserIdentity, getUserIdentity, UserIdentity, initiateOrcidAuth } from "@/api/orcidApi";
-import { getStoredOrcidId, isOrcidAuthenticated } from "@/utils/orcidAuth";
+import { getCurrentUserIdentity, getUserIdentity, UserIdentity } from "@/api/orcidApi";
+import { getStoredOrcidId, isOrcidAuthenticated, clearOrcidAuth } from "@/utils/orcidAuth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Bell,
   Book,
   ChevronDown,
   LogIn,
@@ -21,14 +22,13 @@ import {
   X,
 } from "lucide-react";
 import { currentUser } from "@/data/mockData";
-import { toast } from "sonner";
+import { isDebugMode, getDebugOrcidId } from '@/utils/debugConfig';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [userIdentity, setUserIdentity] = useState<UserIdentity | null>(null);
-  const isLoggedIn = isOrcidAuthenticated(); // Use real ORCID authentication status
-  const navigate = useNavigate();
+  const isLoggedIn = isDebugMode() ? true : isOrcidAuthenticated();
 
   const mainNavItems = [
     { name: "Membership", href: "https://info.orcid.org/membership/" },
@@ -44,13 +44,20 @@ const Navbar = () => {
   ];
 
   const resourcesDropdownItems = [
-    { name: "FAQs", href: "/resources/faqs" },
+    { name: "FAQs", href: "/FAQ" },
   ];
 
   // Load user identity on component mount
   useEffect(() => {
     const loadUserIdentity = async () => {
-      if (isLoggedIn) {
+      if (isDebugMode()) {
+        try {
+          const identity = await getUserIdentity(getDebugOrcidId());
+          setUserIdentity(identity);
+        } catch (err) {
+          // Silently handle error
+        }
+      } else if (isLoggedIn) {
         try {
           const storedOrcidId = getStoredOrcidId();
           if (storedOrcidId) {
@@ -67,20 +74,12 @@ const Navbar = () => {
     loadUserIdentity();
   }, [isLoggedIn]);
 
-  const handleLogout = () => {
-    // Remove ORCID authentication (localStorage/session)
-    localStorage.removeItem("orcid_access_token");
-    localStorage.removeItem("orcid_id");
-    toast.success("Signed out successfully");
-    navigate("/home");
-  };
-
   return (
     <nav className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/home" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-full bg-orcid-green flex items-center justify-center">
               <span className="font-bold text-white">ID</span>
             </div>
@@ -94,25 +93,13 @@ const Navbar = () => {
               {mainNavItems
                 .filter((item) => !item.hasDropdown)
                 .map((item) => (
-                  item.href.startsWith('http') ? (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-700 hover:text-orcid-green font-medium"
-                    >
-                      {item.name}
-                    </a>
-                  ) : (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      className="text-gray-700 hover:text-orcid-green font-medium"
-                    >
-                      {item.name}
-                    </Link>
-                  )
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="text-gray-700 hover:text-orcid-green font-medium"
+                  >
+                    {item.name}
+                  </Link>
                 ))}
             </div>
 
@@ -138,23 +125,12 @@ const Navbar = () => {
                       {item.name === "For Researchers"
                         ? researcherDropdownItems.map((subItem) => (
                             <DropdownMenuItem key={subItem.name} asChild>
-                              {subItem.href.startsWith('http') ? (
-                                <a
-                                  href={subItem.href}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="w-full cursor-pointer"
-                                >
-                                  {subItem.name}
-                                </a>
-                              ) : (
-                                <Link
-                                  to={subItem.href}
-                                  className="w-full cursor-pointer"
-                                >
-                                  {subItem.name}
-                                </Link>
-                              )}
+                              <Link
+                                to={subItem.href}
+                                className="w-full cursor-pointer"
+                              >
+                                {subItem.name}
+                              </Link>
                             </DropdownMenuItem>
                           ))
                         : resourcesDropdownItems.map((subItem) => (
@@ -188,15 +164,11 @@ const Navbar = () => {
                     size="icon"
                     className="p-2"
                     onClick={async () => {
-                      // Always try to fetch fresh identity if logged in, or set default if not
-                      try {
-                        const storedOrcidId = getStoredOrcidId();
-                        if (storedOrcidId && isOrcidAuthenticated()) {
-                          const identity = await getUserIdentity(storedOrcidId);
-                          identity.authenticated = true;
+                      if (isDebugMode()) {
+                        try {
+                          const identity = await getUserIdentity(getDebugOrcidId());
                           setUserIdentity(identity);
-                        } else {
-                          // Set default values for non-logged-in users
+                        } catch (err) {
                           setUserIdentity({
                             orcid_id: 'Unknown',
                             name: 'Unknown User',
@@ -207,24 +179,41 @@ const Navbar = () => {
                             authenticated: false
                           });
                         }
-                      } catch (error) {
-                        // Set default values on error
-                        setUserIdentity({
-                          orcid_id: 'Unknown',
-                          name: 'Unknown User',
-                          email: undefined,
-                          current_affiliation: undefined,
-                          current_location: undefined,
-                          profile_url: 'https://orcid.org',
-                          authenticated: false
-                        });
+                      } else {
+                        try {
+                          const storedOrcidId = getStoredOrcidId();
+                          if (storedOrcidId && isOrcidAuthenticated()) {
+                            const identity = await getUserIdentity(storedOrcidId);
+                            identity.authenticated = true;
+                            setUserIdentity(identity);
+                          } else {
+                            setUserIdentity({
+                              orcid_id: 'Unknown',
+                              name: 'Unknown User',
+                              email: undefined,
+                              current_affiliation: undefined,
+                              current_location: undefined,
+                              profile_url: 'https://orcid.org',
+                              authenticated: false
+                            });
+                          }
+                        } catch (error) {
+                          setUserIdentity({
+                            orcid_id: 'Unknown',
+                            name: 'Unknown User',
+                            email: undefined,
+                            current_affiliation: undefined,
+                            current_location: undefined,
+                            profile_url: 'https://orcid.org',
+                            authenticated: false
+                          });
+                        }
                       }
                       setIsUserModalOpen(true);
                     }}
                   >
                     <User className="h-5 w-5" />
                   </Button>
-                  
                   {/* Dashboard Link Button */}
                   <Link to="/dashboard">
                     <Button variant="ghost" className="py-1 px-3">
@@ -237,30 +226,31 @@ const Navbar = () => {
                     variant="ghost"
                     size="icon"
                     className="p-2"
-                    title="Sign out"
-                    onClick={handleLogout}
+                    title="Logout"
+                    onClick={() => {
+                      clearOrcidAuth();
+                      window.location.reload();
+                    }}
                   >
                     <LogOut className="h-5 w-5" />
                   </Button>
                 </div>
               </>
-            ) : (
-              <>
-                {/* Mobile menu button */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="lg:hidden"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                >
-                  {isMenuOpen ? (
-                    <X className="h-6 w-6" />
-                  ) : (
-                    <Menu className="h-6 w-6" />
-                  )}
-                </Button>
-              </>
-            )}
+            ) : null}
+
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </Button>
           </div>
         </div>
 
@@ -269,36 +259,36 @@ const Navbar = () => {
           <div className="mt-3 py-2 border-t lg:hidden">
             <div className="space-y-2 pt-2 pb-3">
               {mainNavItems.map((item) => (
-                item.href.startsWith('http') ? (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                )
-              ))}
-              {isLoggedIn && (
                 <Link
-                  to="/dashboard"
-                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md sm:hidden"
+                  key={item.name}
+                  to={item.href}
+                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Dashboard
+                  {item.name}
                 </Link>
+              ))}
+              {isLoggedIn && (
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md sm:hidden"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  {/* Logout Button (Mobile) */}
+                  <button
+                    className="w-full flex items-center gap-2 px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
+                    onClick={() => {
+                      clearOrcidAuth();
+                      window.location.reload();
+                    }}
+                  >
+                    <LogOut className="h-5 w-5" />
+                    Logout
+                  </button>
+                </>
               )}
             </div>
           </div>

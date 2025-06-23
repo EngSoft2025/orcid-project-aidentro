@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getCurrentUserIdentity, getUserIdentity, UserIdentity } from '../api/orcidApi';
 import { getStoredOrcidId, isOrcidAuthenticated } from '../utils/orcidAuth';
+import { isDebugMode, getDebugOrcidId } from '../utils/debugConfig';
 
 interface UserProfileProps {
   orcidId?: string; // Optional: if provided, fetch specific user; otherwise get current user
@@ -14,6 +15,17 @@ const UserProfile: React.FC<UserProfileProps> = ({ orcidId, userIdentity: provid
 
   useEffect(() => {
     const fetchUserIdentity = async () => {
+      if (isDebugMode()) {
+        try {
+          const identity = await getUserIdentity(getDebugOrcidId());
+          setUserIdentity(identity);
+        } catch (err) {
+          setError('Failed to fetch ORCID data in debug mode');
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
       try {
         setLoading(true);
         setError(null);
@@ -73,7 +85,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ orcidId, userIdentity: provid
         <p className="text-yellow-600">
           {orcidId 
             ? 'No profile found for the provided ORCID ID.' 
-            : 'No authenticated user found. Please sign in with ORCID.'}
+            : 'No authenticated user found.'}
         </p>
       </div>
     );

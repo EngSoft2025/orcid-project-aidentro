@@ -1,3 +1,4 @@
+
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,22 +23,22 @@ const ProfileCompletion = ({ researcher }: ProfileCompletionProps) => {
     {
       name: "Add personal information",
       completed: !!researcher.name && !!researcher.country,
-      link: "/dashboard"
+      link: "/profile/edit"
     },
     {
       name: "Add professional information",
       completed: !!researcher.institutionName && !!researcher.position,
-      link: "/dashboard"
+      link: "/profile/edit"
     },
     {
       name: "Add biography",
       completed: !!researcher.biography,
-      link: "/dashboard"
+      link: "/profile/edit"
     },
     {
       name: "Select research areas",
       completed: researcher.areaOfExpertise.length > 0,
-      link: "/dashboard"
+      link: "/profile/edit"
     },
     {
       name: "Add publications",
@@ -90,7 +91,7 @@ const ProfileCompletion = ({ researcher }: ProfileCompletionProps) => {
       </CardContent>
       {completionPercentage < 100 && (
         <CardFooter>
-          <Link to="/dashboard" className="w-full">
+          <Link to="/profile/edit" className="w-full">
             <Button className="w-full bg-orcid-green hover:bg-orcid-green/90">
               Complete your profile
             </Button>

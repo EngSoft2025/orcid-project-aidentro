@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { initiateOrcidAuth, getCurrentUser, logout, parseUrlParams } from '../api/orcidApi';
+import { isDebugMode, getDebugOrcidId } from '@/utils/debugConfig';
+import { getUserIdentity } from '@/api/orcidApi';
 
 interface User {
   orcid_id: string;
@@ -13,6 +15,18 @@ const OrcidAuth: React.FC = () => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
+      if (isDebugMode()) {
+        // Debug mode: fetch real data from ORCID API using the hardcoded ID
+        try {
+          const identity = await getUserIdentity(getDebugOrcidId());
+          setUser({ orcid_id: identity.orcid_id, name: identity.name });
+        } catch (err) {
+          setError('Failed to fetch ORCID data in debug mode');
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
       try {
         // Check if we're returning from OAuth callback
         const urlParams = parseUrlParams();
@@ -48,6 +62,10 @@ const OrcidAuth: React.FC = () => {
 
   const handleLogin = () => {
     setError(null);
+    if (isDebugMode()) {
+      // No-op: already authenticated in debug mode
+      return;
+    }
     initiateOrcidAuth('/authenticate');
   };
 
@@ -102,6 +120,9 @@ const OrcidAuth: React.FC = () => {
         >
           Logout
         </button>
+        {isDebugMode() && (
+          <div className="mt-2 text-xs text-purple-700 font-semibold">🔧 DEBUG MODE ATIVO</div>
+        )}
       </div>
     );
   }
@@ -115,11 +136,12 @@ const OrcidAuth: React.FC = () => {
       <button
         onClick={handleLogin}
         className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+        disabled={isDebugMode()}
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
         </svg>
-        <span>Sign in with ORCID</span>
+        <span>{isDebugMode() ? 'Debug login ativo' : 'Sign in with ORCID'}</span>
       </button>
     </div>
   );

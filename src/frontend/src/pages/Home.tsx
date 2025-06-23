@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -20,6 +21,7 @@ import {
   Home as HomeIcon
 } from "lucide-react";
 import { isOrcidAuthenticated, getStoredOrcidId } from "@/utils/orcidAuth";
+import { isDebugMode, getDebugOrcidId } from "@/utils/debugConfig";
 import { getUserIdentity, UserIdentity, initiateOrcidAuth } from "@/api/orcidApi";
 import { toast } from "sonner";
 import Layout from "@/components/layout/Layout";
@@ -32,7 +34,11 @@ const Home = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        if (isOrcidAuthenticated()) {
+        if (isDebugMode()) {
+          const identity = await getUserIdentity(getDebugOrcidId());
+          identity.authenticated = true;
+          setUserIdentity(identity);
+        } else if (isOrcidAuthenticated()) {
           const storedOrcidId = getStoredOrcidId();
           if (storedOrcidId) {
             const identity = await getUserIdentity(storedOrcidId);
@@ -268,7 +274,7 @@ const Home = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-8">
                 <h3 className="text-xl font-semibold text-gray-900">
-                  Your Activity Summary
+                  Resumo da Sua Atividade
                 </h3>
               </div>
               
@@ -276,25 +282,25 @@ const Home = () => {
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 md:p-6 text-center">
                   <BookOpen className="h-6 w-6 md:h-8 md:w-8 text-blue-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-blue-600">0</p>
-                  <p className="text-xs md:text-sm text-blue-700">Publications</p>
+                  <p className="text-xs md:text-sm text-blue-700">Publicações</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 md:p-6 text-center">
                   <Users className="h-6 w-6 md:h-8 md:w-8 text-green-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-green-600">0</p>
-                  <p className="text-xs md:text-sm text-green-700">Connections</p>
+                  <p className="text-xs md:text-sm text-green-700">Conexões</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 md:p-6 text-center">
                   <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-purple-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-purple-600">0</p>
-                  <p className="text-xs md:text-sm text-purple-700">Citations</p>
+                  <p className="text-xs md:text-sm text-purple-700">Citações</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 md:p-6 text-center">
                   <Shield className="h-6 w-6 md:h-8 md:w-8 text-orange-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-orange-600">100%</p>
-                  <p className="text-xs md:text-sm text-orange-700">Profile Complete</p>
+                  <p className="text-xs md:text-sm text-orange-700">Perfil Completo</p>
                 </div>
               </div>
             </div>
@@ -316,7 +322,7 @@ const Home = () => {
                 <Link to="/dashboard" className="w-full sm:w-auto">
                   <Button variant="outline" className="w-full sm:w-auto border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white">
                     <User className="h-4 w-4 mr-2" />
-                    My Profile
+                    Meu Perfil
                   </Button>
                 </Link>
                 

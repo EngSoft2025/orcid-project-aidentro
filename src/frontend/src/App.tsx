@@ -4,7 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
+import DashboardSocial from "./pages/DashboardSocial";
 import Search from "./pages/Search";
 import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
@@ -12,6 +14,7 @@ import AuthSuccess from "./pages/AuthSuccess";
 import AuthError from "./pages/AuthError";
 import OrcidTest from "./pages/OrcidTest";
 import CitationTestDashboard from "./pages/CitationTestDashboard";
+import DebugBanner from "@/components/ui/debug-banner";
 import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
@@ -21,17 +24,16 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <DebugBanner />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard-social" element={<DashboardSocial />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/connections" element={<Home />} />
-          
-          {/* Resources */}
-          <Route path="/resources/faqs" element={<FAQ />} />
           
           {/* Auth callback routes */}
           <Route path="/auth/success" element={<AuthSuccess />} />
@@ -44,14 +46,11 @@ const App = () => (
           {/* Placeholder routes to avoid 404s */}
           <Route path="/about" element={<Home />} />
           <Route path="/researchers" element={<Home />} />
-          <Route path="/documentation/api" element={<Home />} />
-          <Route path="/news/blog" element={<Home />} />
-          <Route path="/get-involved" element={<Home />} />
-          <Route path="/about/mission" element={<Home />} />
-          <Route path="/about/team" element={<Home />} />
-          <Route path="/about/contact" element={<Home />} />
-          <Route path="/privacy" element={<Home />} />
-          <Route path="/terms" element={<Home />} />
+          <Route path="/membership" element={<Home />} />
+          <Route path="/documentation" element={<Home />} />
+          <Route path="/resources" element={<Home />} />
+          <Route path="/news" element={<Home />} />
+          <Route path="/FAQ" element={<FAQ />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

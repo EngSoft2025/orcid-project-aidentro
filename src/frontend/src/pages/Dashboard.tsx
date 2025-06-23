@@ -11,6 +11,7 @@ import UserProfile from "@/components/UserProfile";
 import UserInfoModal from "@/components/UserInfoModal";
 import { getCurrentUserIdentity, getUserIdentity, UserIdentity, getCitationMetrics, getResearcherPapers, ResearcherPapersResponse, getSocialMediaAccounts, SocialMediaResponse, addSocialMediaAccount } from "@/api/orcidApi";
 import { getStoredOrcidId, isOrcidAuthenticated, clearOrcidAuth } from "@/utils/orcidAuth";
+import { isDebugMode, getDebugOrcidId } from "@/utils/debugConfig";
 import { CitationMetrics } from "@/types";
 import { Book, FilePlus, Users, Award, BookUser, Lightbulb, User, RefreshCw, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -62,29 +63,36 @@ const Dashboard = () => {
         setLoadingUser(true);
         setUserError(null);
         
-        // Check if we have stored ORCID ID
-        const storedOrcidId = getStoredOrcidId();
-        const isAuthenticated = isOrcidAuthenticated();
-        
-        if (storedOrcidId && isAuthenticated) {
-          console.log('Using stored ORCID ID:', storedOrcidId);
-          // Use stored ORCID ID to get user identity
-          const identity = await getUserIdentity(storedOrcidId);
-          identity.authenticated = true; // Mark as authenticated since we have stored credentials
+        if (isDebugMode()) {
+          // Debug: sempre usa o ORCID hardcoded
+          const identity = await getUserIdentity(getDebugOrcidId());
+          identity.authenticated = true;
           setUserIdentity(identity);
-          
-          // Auto-fetch citation data, papers, and social media for authenticated users
-          fetchCitationData(storedOrcidId);
-          fetchPapers(storedOrcidId);
-          fetchSocialMedia(storedOrcidId);
+          fetchCitationData(getDebugOrcidId());
+          fetchPapers(getDebugOrcidId());
+          fetchSocialMedia(getDebugOrcidId());
         } else {
-          console.log('No stored ORCID ID found, loading demo data');
-          setUserIdentity(null);
-          
-          // Fetch demo citation data, papers, and social media for non-authenticated users
-          fetchDemoCitationData();
-          fetchDemoPapers();
-          fetchDemoSocialMedia();
+          // Check if we have stored ORCID ID
+          const storedOrcidId = getStoredOrcidId();
+          const isAuthenticated = isOrcidAuthenticated();
+          if (storedOrcidId && isAuthenticated) {
+            console.log('Using stored ORCID ID:', storedOrcidId);
+            // Use stored ORCID ID to get user identity
+            const identity = await getUserIdentity(storedOrcidId);
+            identity.authenticated = true; // Mark as authenticated since we have stored credentials
+            setUserIdentity(identity);
+            // Auto-fetch citation data, papers, and social media for authenticated users
+            fetchCitationData(storedOrcidId);
+            fetchPapers(storedOrcidId);
+            fetchSocialMedia(storedOrcidId);
+          } else {
+            console.log('No stored ORCID ID found, loading demo data');
+            setUserIdentity(null);
+            // Fetch demo citation data, papers, and social media for non-authenticated users
+            fetchDemoCitationData();
+            fetchDemoPapers();
+            fetchDemoSocialMedia();
+          }
         }
       } catch (error) {
         console.error("Failed to fetch user identity:", error);
@@ -234,7 +242,7 @@ const Dashboard = () => {
 
   // Determine display name and authentication status
   const isAuthenticated = userIdentity?.authenticated || false;
-  const displayName = isAuthenticated ? userIdentity.name : 'Guest';
+  const displayName = isAuthenticated ? userIdentity?.name : 'Guest';
 
   // Get the appropriate citation metrics, papers, and social media to display
   const displayMetrics = isAuthenticated ? citationMetrics : demoCitationMetrics;
@@ -331,7 +339,7 @@ const Dashboard = () => {
       <div className="px-4 py-8 md:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Your Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <div className="mt-1 flex items-center space-x-2">
               {loadingUser ? (
                 <div className="flex items-center space-x-2">
@@ -406,6 +414,12 @@ const Dashboard = () => {
                   onClick={() => window.open(userIdentity?.profile_url, '_blank')}
                 >
                   View ORCID Profile
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                >
+                  Logout
                 </Button>
               </div>
             ) : (
@@ -501,7 +515,11 @@ const Dashboard = () => {
             />
             
             {/* Recent Publications */}
-            <RecentPublications publications={[]} />
+            <RecentPublications 
+              publications={[]} 
+              papers={displayPapers?.papers || []}
+              isLoading={isLoadingPapersDisplay}
+            />
           </div>
           
           <div className="space-y-4">
@@ -566,11 +584,9 @@ const Dashboard = () => {
                   </Link>
                 </li>
                 <li className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="text-sm text-gray-600">
-                    <Link to="/dashboard" className="text-gray-800 hover:text-orcid-green">
-                      Add social media links to your profile
-                    </Link>
-                  </div>
+                  <Link to="/profile/edit" className="text-gray-800 hover:text-orcid-green">
+                    Add social media links to your profile
+                  </Link>
                 </li>
                 {isAuthenticated && !loadingCitations && !citationMetrics && (
                   <li className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">

@@ -102,7 +102,6 @@ const OrcidTest: React.FC = () => {
                 <ul className="space-y-1 text-gray-600">
                   <li>• <code>/auth/success</code> - Success callback</li>
                   <li>• <code>/auth/error</code> - Error callback</li>
-                  <li>• <code>/signin</code> - Sign in page</li>
                   <li>• <code>/orcid-test</code> - This test page</li>
                 </ul>
               </div>
