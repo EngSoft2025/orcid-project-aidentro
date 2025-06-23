@@ -62,7 +62,7 @@ const Home = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orcid-green mx-auto"></div>
-            <p className="mt-4 text-gray-600">Carregando...</p>
+            <p className="mt-4 text-gray-600">Loading...</p>
           </div>
         </div>
       </Layout>
@@ -77,7 +77,7 @@ const Home = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex items-center space-x-3 mb-6">
               <HomeIcon className="h-8 w-8 text-orcid-green" />
-              <h1 className="text-3xl font-bold text-gray-900">Página Inicial</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Home</h1>
             </div>
             
             {userIdentity ? (
@@ -88,7 +88,7 @@ const Home = () => {
                   </div>
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900">
-                      Bem-vindo, {userIdentity.name}!
+                      Welcome, {userIdentity.name}!
                     </h2>
                     <p className="text-gray-600">ORCID: {userIdentity.orcid_id}</p>
                     {userIdentity.current_affiliation && (
@@ -103,10 +103,10 @@ const Home = () => {
               <div className="bg-gradient-to-r from-blue-50 to-orcid-green/5 rounded-lg p-6">
                 <div className="text-center">
                   <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-                    Bem-vindo à Plataforma ORCID
+                    Welcome to the ORCID Platform
                   </h2>
                   <p className="text-gray-600 mb-6">
-                    Conecte-se com sua identidade de pesquisador e explore a rede global de pesquisa
+                    Connect with your researcher identity and explore the global research network
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button 
@@ -114,12 +114,12 @@ const Home = () => {
                       onClick={handleOrcidSignIn}
                     >
                       <User className="h-4 w-4 mr-2" />
-                      Conectar com ORCID
+                      Connect with ORCID
                     </Button>
                     <Link to="/search">
                       <Button variant="outline" className="px-6 py-2">
                         <Search className="h-4 w-4 mr-2" />
-                        Explorar Pesquisadores
+                        Explore Researchers
                       </Button>
                     </Link>
                   </div>
@@ -135,10 +135,10 @@ const Home = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  O que você gostaria de fazer?
+                  What would you like to do?
                 </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                  Acesse suas conexões, gerencie seu perfil ou explore pesquisadores na plataforma ORCID.
+                  Access your connections, manage your profile, or explore researchers on the ORCID platform.
                 </p>
               </div>
 
@@ -149,19 +149,19 @@ const Home = () => {
                     <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Users className="h-8 w-8 text-blue-600" />
                     </div>
-                    <CardTitle className="text-xl">Ver Conexões</CardTitle>
+                    <CardTitle className="text-xl">View Connections</CardTitle>
                     <CardDescription>
-                      Explore suas conexões profissionais e colaborações
+                      Explore your professional connections and collaborations
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-center flex-grow flex flex-col">
                     <p className="text-gray-600 mb-6 flex-grow">
-                      Visualize suas conexões com outros pesquisadores, instituições e projetos de pesquisa.
+                      View your connections with other researchers, institutions, and research projects.
                     </p>
                     <Link to="/connections" className="mt-auto">
                       <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                         <Users className="h-4 w-4 mr-2" />
-                        Ver Conexões
+                        View Connections
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </Link>
@@ -174,19 +174,19 @@ const Home = () => {
                     <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <User className="h-8 w-8 text-green-600" />
                     </div>
-                    <CardTitle className="text-xl">Acesso ao Perfil</CardTitle>
+                    <CardTitle className="text-xl">Profile Access</CardTitle>
                     <CardDescription>
-                      Gerencie e atualize suas informações pessoais
+                      Manage and update your personal information
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-center flex-grow flex flex-col">
                     <p className="text-gray-600 mb-6 flex-grow">
-                      Acesse e edite seu perfil ORCID, publicações, afiliações e outras informações profissionais.
+                      Access and edit your ORCID profile, publications, affiliations, and other professional information.
                     </p>
                     <Link to="/dashboard" className="mt-auto">
                       <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
                         <User className="h-4 w-4 mr-2" />
-                        Acessar Perfil
+                        Access Profile
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </Link>
@@ -199,19 +199,19 @@ const Home = () => {
                     <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Search className="h-8 w-8 text-purple-600" />
                     </div>
-                    <CardTitle className="text-xl">Pesquisar</CardTitle>
+                    <CardTitle className="text-xl">Search</CardTitle>
                     <CardDescription>
-                      Encontre pesquisadores e publicações
+                      Find researchers and publications
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-center flex-grow flex flex-col">
                     <p className="text-gray-600 mb-6 flex-grow">
-                      Pesquise por pesquisadores, publicações e instituições na base de dados ORCID.
+                      Search for researchers, publications, and institutions in the ORCID database.
                     </p>
                     <Link to="/search" className="mt-auto">
                       <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
                         <Search className="h-4 w-4 mr-2" />
-                        Pesquisar
+                        Search
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </Link>
@@ -225,10 +225,10 @@ const Home = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Explore a Plataforma
+                  Explore the Platform
                 </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                  Pesquise por pesquisadores e publicações na base de dados ORCID.
+                  Search for researchers and publications in the ORCID database.
                 </p>
               </div>
 
@@ -239,19 +239,19 @@ const Home = () => {
                     <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Search className="h-8 w-8 text-purple-600" />
                     </div>
-                    <CardTitle className="text-xl">Pesquisar</CardTitle>
+                    <CardTitle className="text-xl">Search</CardTitle>
                     <CardDescription>
-                      Encontre pesquisadores e publicações
+                      Find researchers and publications
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-center flex-grow flex flex-col">
                     <p className="text-gray-600 mb-6 flex-grow">
-                      Pesquise por pesquisadores, publicações e instituições na base de dados ORCID.
+                      Search for researchers, publications, and institutions in the ORCID database.
                     </p>
                     <Link to="/search" className="mt-auto">
                       <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
                         <Search className="h-4 w-4 mr-2" />
-                        Pesquisar
+                        Search
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </Link>
@@ -268,7 +268,7 @@ const Home = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-8">
                 <h3 className="text-xl font-semibold text-gray-900">
-                  Resumo da Sua Atividade
+                  Your Activity Summary
                 </h3>
               </div>
               
@@ -276,25 +276,25 @@ const Home = () => {
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 md:p-6 text-center">
                   <BookOpen className="h-6 w-6 md:h-8 md:w-8 text-blue-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-blue-600">0</p>
-                  <p className="text-xs md:text-sm text-blue-700">Publicações</p>
+                  <p className="text-xs md:text-sm text-blue-700">Publications</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 md:p-6 text-center">
                   <Users className="h-6 w-6 md:h-8 md:w-8 text-green-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-green-600">0</p>
-                  <p className="text-xs md:text-sm text-green-700">Conexões</p>
+                  <p className="text-xs md:text-sm text-green-700">Connections</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 md:p-6 text-center">
                   <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-purple-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-purple-600">0</p>
-                  <p className="text-xs md:text-sm text-purple-700">Citações</p>
+                  <p className="text-xs md:text-sm text-purple-700">Citations</p>
                 </div>
                 
                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 md:p-6 text-center">
                   <Shield className="h-6 w-6 md:h-8 md:w-8 text-orange-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-orange-600">100%</p>
-                  <p className="text-xs md:text-sm text-orange-700">Perfil Completo</p>
+                  <p className="text-xs md:text-sm text-orange-700">Profile Complete</p>
                 </div>
               </div>
             </div>
@@ -316,14 +316,14 @@ const Home = () => {
                 <Link to="/dashboard" className="w-full sm:w-auto">
                   <Button variant="outline" className="w-full sm:w-auto border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white">
                     <User className="h-4 w-4 mr-2" />
-                    Meu Perfil
+                    My Profile
                   </Button>
                 </Link>
                 
                 <Link to="/search" className="w-full sm:w-auto">
                   <Button variant="outline" className="w-full sm:w-auto border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white">
                     <Search className="h-4 w-4 mr-2" />
-                    Pesquisar
+                    Search
                   </Button>
                 </Link>
               </div>

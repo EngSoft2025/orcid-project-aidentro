@@ -36,107 +36,107 @@ const FAQ = () => {
   const faqData = {
     general: [
       {
-        question: "O que é o ORCID?",
-        answer: "ORCID (Open Researcher and Contributor ID) é um identificador digital único e persistente que distingue você de todos os outros pesquisadores. É uma organização sem fins lucrativos que fornece uma infraestrutura de pesquisa confiável para conectar pesquisadores e suas contribuições."
+        question: "What is ORCID?",
+        answer: "ORCID (Open Researcher and Contributor ID) is a unique and persistent digital identifier that distinguishes you from all other researchers. It is a non-profit organization that provides a trusted research infrastructure to connect researchers and their contributions."
       },
       {
-        question: "Por que preciso de um ORCID iD?",
-        answer: "Um ORCID iD ajuda a garantir que suas publicações, financiamentos e outras contribuições sejam corretamente atribuídas a você, evitando confusão com pesquisadores que tenham nomes similares. É amplamente aceito por editores, financiadores e instituições de pesquisa."
+        question: "Why do I need an ORCID iD?",
+        answer: "An ORCID iD helps ensure your publications, funding, and other contributions are correctly attributed to you, avoiding confusion with researchers who have similar names. It is widely accepted by publishers, funders, and research institutions."
       },
       {
-        question: "O ORCID iD é gratuito?",
-        answer: "Sim! Obter e manter um ORCID iD é completamente gratuito para pesquisadores individuais. O ORCID é financiado por organizações membros que se beneficiam da infraestrutura de identificação de pesquisadores."
+        question: "Is the ORCID iD free?",
+        answer: "Yes! Obtaining and maintaining an ORCID iD is completely free for individual researchers. ORCID is funded by member organizations that benefit from the researcher identification infrastructure."
       },
       {
-        question: "Como posso criar meu ORCID iD?",
-        answer: "Você pode criar seu ORCID iD visitando orcid.org e clicando em 'Register for an ORCID iD'. O processo é simples e leva apenas alguns minutos. Você precisará fornecer informações básicas como nome, email e afiliação."
+        question: "How can I create my ORCID iD?",
+        answer: "You can create your ORCID iD by visiting orcid.org and clicking 'Register for an ORCID iD'. The process is simple and takes just a few minutes. You will need to provide basic information such as name, email, and affiliation."
       }
     ],
     platform: [
       {
-        question: "Como funciona esta plataforma?",
-        answer: "Esta plataforma é uma interface personalizada para gerenciar e visualizar dados do ORCID. Ela permite conectar seu ORCID iD, visualizar suas publicações, métricas de citação, e gerenciar suas informações profissionais de forma mais intuitiva."
+        question: "How does this platform work?",
+        answer: "This platform is a custom interface to manage and view ORCID data. It allows you to connect your ORCID iD, view your publications, citation metrics, and manage your professional information more intuitively."
       },
       {
-        question: "Preciso estar logado para usar a plataforma?",
-        answer: "Algumas funcionalidades básicas estão disponíveis sem login, mas para acessar seus dados pessoais, métricas de citação e funcionalidades avançadas, você precisa fazer login com seu ORCID iD."
+        question: "Do I need to be logged in to use the platform?",
+        answer: "Some basic features are available without login, but to access your personal data, citation metrics, and advanced features, you need to log in with your ORCID iD."
       },
       {
-        question: "Como posso conectar meu ORCID iD à plataforma?",
-        answer: "Clique no botão 'Sign in' no canto superior direito e selecione 'ORCID'. Você será redirecionado para o site do ORCID para autorizar o acesso. Após a autorização, você será redirecionado de volta à plataforma."
+        question: "How can I connect my ORCID iD to the platform?",
+        answer: "Click the 'Sign in' button in the upper right corner and select 'ORCID'. You will be redirected to the ORCID website to authorize access. After authorization, you will be redirected back to the platform."
       },
       {
-        question: "Minhas informações estão seguras?",
-        answer: "Sim! A plataforma segue as melhores práticas de segurança e só acessa as informações que você autoriza. Suas credenciais do ORCID nunca são armazenadas na plataforma - apenas um token de acesso temporário é usado."
+        question: "Is my information secure?",
+        answer: "Yes! The platform follows best security practices and only accesses the information you authorize. Your ORCID credentials are never stored on the platform - only a temporary access token is used."
       }
     ],
     citations: [
       {
-        question: "Como são calculadas as métricas de citação?",
-        answer: "As métricas de citação são calculadas usando dados do CrossRef, que é a principal fonte de informações sobre citações acadêmicas. O sistema analisa suas publicações com DOI e busca as citações correspondentes."
+        question: "How are citation metrics calculated?",
+        answer: "Citation metrics are calculated using data from CrossRef, which is the main source of academic citation information. The system analyzes your publications with DOIs and retrieves the corresponding citations."
       },
       {
-        question: "Por que algumas publicações não aparecem nas métricas?",
-        answer: "Publicações sem DOI ou que não estão indexadas no CrossRef podem não aparecer nas métricas. Certifique-se de que suas publicações tenham DOIs válidos e estejam corretamente listadas no seu perfil ORCID."
+        question: "Why do some publications not appear in the metrics?",
+        answer: "Publications without a DOI or not indexed in CrossRef may not appear in the metrics. Make sure your publications have valid DOIs and are correctly listed in your ORCID profile."
       },
       {
-        question: "Com que frequência são atualizadas as métricas?",
-        answer: "As métricas são atualizadas em tempo real quando você solicita uma análise. Os dados do CrossRef são atualizados regularmente, então as informações mais recentes estarão disponíveis."
+        question: "How often are the metrics updated?",
+        answer: "Metrics are updated in real time when you request an analysis. CrossRef data is updated regularly, so the latest information will be available."
       },
       {
-        question: "O que é o h-index aproximado?",
-        answer: "O h-index aproximado é uma estimativa baseada nas suas publicações e citações disponíveis. É calculado usando a mesma metodologia do h-index tradicional, mas pode variar ligeiramente devido à cobertura dos dados."
+        question: "What is the approximate h-index?",
+        answer: "The approximate h-index is an estimate based on your available publications and citations. It is calculated using the same methodology as the traditional h-index, but may vary slightly due to data coverage."
       }
     ],
     technical: [
       {
-        question: "Quais navegadores são suportados?",
-        answer: "A plataforma é compatível com todos os navegadores modernos, incluindo Chrome, Firefox, Safari, Edge e outros navegadores baseados em Chromium. Recomendamos usar a versão mais recente do seu navegador."
+        question: "Which browsers are supported?",
+        answer: "The platform is compatible with all modern browsers, including Chrome, Firefox, Safari, Edge, and other Chromium-based browsers. We recommend using the latest version of your browser."
       },
       {
-        question: "A plataforma funciona em dispositivos móveis?",
-        answer: "Sim! A plataforma é totalmente responsiva e funciona bem em smartphones e tablets. Todas as funcionalidades principais estão disponíveis em dispositivos móveis."
+        question: "Does the platform work on mobile devices?",
+        answer: "Yes! The platform is fully responsive and works well on smartphones and tablets. All main features are available on mobile devices."
       },
       {
-        question: "Como posso exportar meus dados?",
-        answer: "Atualmente, os dados são exibidos na plataforma. Para exportar dados completos do seu perfil ORCID, você pode visitar diretamente orcid.org e usar as opções de exportação disponíveis lá."
+        question: "How can I export my data?",
+        answer: "Currently, data is displayed on the platform. To export complete data from your ORCID profile, you can visit orcid.org directly and use the export options available there."
       },
       {
-        question: "O que fazer se encontrar um erro?",
-        answer: "Se você encontrar algum erro, tente atualizar a página primeiro. Se o problema persistir, verifique sua conexão com a internet e se está logado corretamente. Para problemas persistentes, entre em contato conosco."
+        question: "What should I do if I encounter an error?",
+        answer: "If you encounter an error, try refreshing the page first. If the problem persists, check your internet connection and if you are logged in correctly. For persistent issues, contact us."
       }
     ]
   };
 
   const categories = [
-    { id: "general", name: "Geral", icon: <HelpCircle className="h-5 w-5" /> },
-    { id: "platform", name: "Plataforma", icon: <Settings className="h-5 w-5" /> },
-    { id: "citations", name: "Citações", icon: <FileText className="h-5 w-5" /> },
-    { id: "technical", name: "Técnico", icon: <Search className="h-5 w-5" /> },
+    { id: "general", name: "General", icon: <HelpCircle className="h-5 w-5" /> },
+    { id: "platform", name: "Platform", icon: <Settings className="h-5 w-5" /> },
+    { id: "citations", name: "Citations", icon: <FileText className="h-5 w-5" /> },
+    { id: "technical", name: "Technical", icon: <Search className="h-5 w-5" /> },
   ];
 
   const usefulLinks = [
     {
-      title: "Documentação Oficial do ORCID",
-      description: "Guia completo sobre como usar o ORCID",
+      title: "Official ORCID Documentation",
+      description: "Complete guide on how to use ORCID",
       url: "https://info.orcid.org/documentation/",
       icon: <BookOpen className="h-5 w-5" />
     },
     {
-      title: "FAQ Oficial do ORCID",
-      description: "Perguntas frequentes oficiais",
+      title: "Official ORCID FAQ",
+      description: "Official frequently asked questions",
       url: "https://info.orcid.org/researcher-faq/",
       icon: <HelpCircle className="h-5 w-5" />
     },
     {
-      title: "Tutoriais em Vídeo",
-      description: "Vídeos explicativos sobre o ORCID",
+      title: "Video Tutorials",
+      description: "Explanatory videos about ORCID",
       url: "https://info.orcid.org/video-tutorials/",
       icon: <Users className="h-5 w-5" />
     },
     {
-      title: "Política de Privacidade",
-      description: "Como seus dados são protegidos",
+      title: "Privacy Policy",
+      description: "How your data is protected",
       url: "https://orcid.org/privacy-policy",
       icon: <Shield className="h-5 w-5" />
     }
@@ -151,11 +151,11 @@ const FAQ = () => {
             <div className="text-center">
               <div className="flex items-center justify-center space-x-3 mb-6">
                 <HelpCircle className="h-12 w-12 text-orcid-green" />
-                <h1 className="text-4xl font-bold text-gray-900">Perguntas Frequentes</h1>
+                <h1 className="text-4xl font-bold text-gray-900">Frequently Asked Questions</h1>
               </div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Encontre respostas para as dúvidas mais comuns sobre o ORCID e nossa plataforma. 
-                Se não encontrar o que procura, entre em contato conosco.
+                Find answers to the most common questions about ORCID and our platform.
+                If you can't find what you're looking for, contact us.
               </p>
             </div>
           </div>
@@ -169,7 +169,7 @@ const FAQ = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Settings className="h-5 w-5" />
-                    <span>Categorias</span>
+                    <span>Categories</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -199,7 +199,7 @@ const FAQ = () => {
                     <span>{categories.find(c => c.id === activeCategory)?.name}</span>
                   </CardTitle>
                   <CardDescription>
-                    Perguntas frequentes sobre {categories.find(c => c.id === activeCategory)?.name.toLowerCase()}
+                    Frequently asked questions about {categories.find(c => c.id === activeCategory)?.name.toLowerCase()}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -225,7 +225,7 @@ const FAQ = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <ExternalLink className="h-5 w-5" />
-                    <span>Links Úteis</span>
+                    <span>Useful Links</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

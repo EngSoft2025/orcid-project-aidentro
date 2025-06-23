@@ -331,7 +331,7 @@ const Dashboard = () => {
       <div className="px-4 py-8 md:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Your Dashboard</h1>
             <div className="mt-1 flex items-center space-x-2">
               {loadingUser ? (
                 <div className="flex items-center space-x-2">
@@ -406,12 +406,6 @@ const Dashboard = () => {
                   onClick={() => window.open(userIdentity?.profile_url, '_blank')}
                 >
                   View ORCID Profile
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleLogout}
-                >
-                  Logout
                 </Button>
               </div>
             ) : (
