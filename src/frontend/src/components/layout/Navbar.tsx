@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import UserInfoModal from "@/components/UserInfoModal";
 import { getCurrentUserIdentity, getUserIdentity, UserIdentity } from "@/api/orcidApi";
@@ -14,18 +14,21 @@ import {
   Book,
   ChevronDown,
   LogIn,
+  LogOut,
   Menu,
   Search,
   User,
   X,
 } from "lucide-react";
 import { currentUser } from "@/data/mockData";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [userIdentity, setUserIdentity] = useState<UserIdentity | null>(null);
   const isLoggedIn = isOrcidAuthenticated(); // Use real ORCID authentication status
+  const navigate = useNavigate();
 
   const mainNavItems = [
     { name: "Membership", href: "https://info.orcid.org/membership/" },
@@ -63,6 +66,14 @@ const Navbar = () => {
 
     loadUserIdentity();
   }, [isLoggedIn]);
+
+  const handleLogout = () => {
+    // Remove ORCID authentication (localStorage/session)
+    localStorage.removeItem("orcid_access_token");
+    localStorage.removeItem("orcid_id");
+    toast.success("Signed out successfully");
+    navigate("/signin");
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sticky top-0 z-50">
@@ -221,6 +232,16 @@ const Navbar = () => {
                       <span className="md:hidden">Dash</span>
                     </Button>
                   </Link>
+                  {/* Logout Button */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="p-2"
+                    title="Sign out"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-5 w-5" />
+                  </Button>
                 </div>
               </>
             ) : (
