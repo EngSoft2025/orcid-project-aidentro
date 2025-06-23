@@ -20,7 +20,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 class ORCIDAPIClient:
     """Client for interacting with ORCID Public API, instantiated with a given access token or orcid_id """
     
-    def __init__(self, access_token: str, orcid_id: str, base_url: str = None):
+    def __init__(self,  orcid_id: str, base_url: str = None, access_token: str = "", verify_ssl: bool = True):
         """
         Initialize ORCID API client.
         
@@ -28,12 +28,14 @@ class ORCIDAPIClient:
             access_token: Valid ORCID access token (can be empty for public API calls)
             orcid_id: ORCID identifier (mandatory)
             base_url: ORCID base URL (defaults to config value)
+            verify_ssl: Whether to verify SSL certificates (default: True)
         """
         if not orcid_id:
             raise ValueError("ORCID ID is required")
         
         self.access_token = access_token
         self.orcid_id = orcid_id
+        self.verify_ssl = verify_ssl
         # Use production by default since many ORCID IDs are from production
         self.base_url = base_url or config('ORCID_BASE_URL', default='https://orcid.org')
         
@@ -50,29 +52,44 @@ class ORCIDAPIClient:
     
     def _make_request(self, url, params=None):
         """
-        Make HTTP request with SSL verification handling.
+        Make HTTP request with configurable SSL verification.
         
         Args:
             url: Request URL
             params: Query parameters
             
         Returns:
-            Response JSON data
+            Response JSON data (always returns a dict, never None)
         """
-        try:
-            response = requests.get(url, headers=self.headers, params=params, verify=True)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.SSLError:
-            # If SSL verification fails, try without verification (for testing environments)
-            print("⚠️  SSL verification failed, retrying without verification...")
-            # Disable SSL warnings for this request
+        # Disable SSL warnings if SSL verification is disabled
+        if not self.verify_ssl:
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-            response = requests.get(url, headers=self.headers, params=params, verify=False)
+        
+        try:
+            response = requests.get(url, headers=self.headers, params=params, verify=self.verify_ssl)
             response.raise_for_status()
-            return response.json()
+            result = response.json()
+            # Ensure we always return a dictionary
+            return result if result is not None else {}
+        except requests.exceptions.SSLError:
+            # If SSL verification fails and we haven't already disabled it, try without verification
+            if self.verify_ssl:
+                print("⚠️  SSL verification failed, retrying without verification...")
+                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+                response = requests.get(url, headers=self.headers, params=params, verify=False)
+                response.raise_for_status()
+                result = response.json()
+                # Ensure we always return a dictionary
+                return result if result is not None else {}
+            else:
+                # SSL was already disabled, re-raise the error
+                raise
+        except Exception as e:
+            # Log the error and return empty dict to prevent None returns
+            print(f"❌ Request failed for {url}: {str(e)}")
+            return {}
     
-    def search_researchers(self, query: str, rows: int = 20, start: int = 0) -> Dict:
+    def search_researchers(self, query: str, rows: int = 50, start: int = 0) -> Dict:
         """
         Search for researchers in the ORCID registry.
         
