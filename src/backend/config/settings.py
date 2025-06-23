@@ -47,16 +47,16 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True  # Temporarily enabled for debugging CORS issues
 
 # Session configuration - simplified for local admin access
-SESSION_COOKIE_SAMESITE = 'Lax'  # Use 'Lax' for local development
-SESSION_COOKIE_SECURE = False  # False for local development (HTTP)
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # CSRF configuration - simplified for local admin access
-CSRF_COOKIE_SAMESITE = 'Lax'  # Use 'Lax' for local development
-CSRF_COOKIE_SECURE = False  # False for local development (HTTP)
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True  # False for local development (HTTP)
 CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript access in development
 CSRF_TRUSTED_ORIGINS = [
     "https://orcid-project-aidentro.vercel.app",
