@@ -44,10 +44,14 @@ const App = () => (
           {/* Placeholder routes to avoid 404s */}
           <Route path="/about" element={<Home />} />
           <Route path="/researchers" element={<Home />} />
-          <Route path="/membership" element={<Home />} />
-          <Route path="/documentation" element={<Home />} />
-          <Route path="/resources" element={<Home />} />
-          <Route path="/news" element={<Home />} />
+          <Route path="/documentation/api" element={<Home />} />
+          <Route path="/news/blog" element={<Home />} />
+          <Route path="/get-involved" element={<Home />} />
+          <Route path="/about/mission" element={<Home />} />
+          <Route path="/about/team" element={<Home />} />
+          <Route path="/about/contact" element={<Home />} />
+          <Route path="/privacy" element={<Home />} />
+          <Route path="/terms" element={<Home />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

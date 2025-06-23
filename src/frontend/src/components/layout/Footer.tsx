@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -18,17 +17,16 @@ const Footer = () => {
       title: "Resources",
       links: [
         { name: "For Researchers", href: "/researchers" },
-        { name: "For Organizations", href: "/membership" },
-        { name: "Documentation", href: "/documentation" },
+        { name: "For Organizations", href: "https://info.orcid.org/membership/" },
+        { name: "Documentation", href: "https://info.orcid.org/documentation/" },
         { name: "API", href: "/documentation/api" },
       ],
     },
     {
       title: "Community",
       links: [
-        { name: "News & Events", href: "/news" },
+        { name: "News & Events", href: "https://info.orcid.org/news-events/" },
         { name: "Blog", href: "/news/blog" },
-        { name: "Success Stories", href: "/researchers/stories" },
         { name: "Get Involved", href: "/get-involved" },
       ],
     },
@@ -78,12 +76,23 @@ const Footer = () => {
                 <ul className="mt-4 space-y-2">
                   {group.links.map((link) => (
                     <li key={link.name}>
-                      <Link
-                        to={link.href}
-                        className="text-sm text-gray-600 hover:text-orcid-green"
-                      >
-                        {link.name}
-                      </Link>
+                      {link.href.startsWith('http') ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-gray-600 hover:text-orcid-green"
+                        >
+                          {link.name}
+                        </a>
+                      ) : (
+                        <Link
+                          to={link.href}
+                          className="text-sm text-gray-600 hover:text-orcid-green"
+                        >
+                          {link.name}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>

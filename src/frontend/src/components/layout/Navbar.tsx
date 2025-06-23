@@ -28,17 +28,16 @@ const Navbar = () => {
   const isLoggedIn = isOrcidAuthenticated(); // Use real ORCID authentication status
 
   const mainNavItems = [
-    { name: "Membership", href: "/membership" },
-    { name: "Documentation", href: "/documentation" },
-    { name: "News & Events", href: "/news" },
+    { name: "Membership", href: "https://info.orcid.org/membership/" },
+    { name: "Documentation", href: "https://info.orcid.org/documentation/" },
+    { name: "News & Events", href: "https://info.orcid.org/news-events/" },
     { name: "Resources", href: "/resources", hasDropdown: true },
     { name: "For Researchers", href: "/researchers", hasDropdown: true },
   ];
 
   const researcherDropdownItems = [
-    { name: "Benefits", href: "/researchers/benefits" },
-    { name: "Tools", href: "/researchers/tools" },
-    { name: "Success Stories", href: "/researchers/stories" },
+    { name: "Benefits", href: "https://info.orcid.org/researcher-faq/" },
+    { name: "Tools", href: "https://info.orcid.org/video-tutorials/" },
   ];
 
   const resourcesDropdownItems = [
@@ -84,13 +83,25 @@ const Navbar = () => {
               {mainNavItems
                 .filter((item) => !item.hasDropdown)
                 .map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="text-gray-700 hover:text-orcid-green font-medium"
-                  >
-                    {item.name}
-                  </Link>
+                  item.href.startsWith('http') ? (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-700 hover:text-orcid-green font-medium"
+                    >
+                      {item.name}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className="text-gray-700 hover:text-orcid-green font-medium"
+                    >
+                      {item.name}
+                    </Link>
+                  )
                 ))}
             </div>
 
@@ -116,12 +127,23 @@ const Navbar = () => {
                       {item.name === "For Researchers"
                         ? researcherDropdownItems.map((subItem) => (
                             <DropdownMenuItem key={subItem.name} asChild>
-                              <Link
-                                to={subItem.href}
-                                className="w-full cursor-pointer"
-                              >
-                                {subItem.name}
-                              </Link>
+                              {subItem.href.startsWith('http') ? (
+                                <a
+                                  href={subItem.href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-full cursor-pointer"
+                                >
+                                  {subItem.name}
+                                </a>
+                              ) : (
+                                <Link
+                                  to={subItem.href}
+                                  className="w-full cursor-pointer"
+                                >
+                                  {subItem.name}
+                                </Link>
+                              )}
                             </DropdownMenuItem>
                           ))
                         : resourcesDropdownItems.map((subItem) => (
@@ -241,14 +263,27 @@ const Navbar = () => {
           <div className="mt-3 py-2 border-t lg:hidden">
             <div className="space-y-2 pt-2 pb-3">
               {mainNavItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
+                item.href.startsWith('http') ? (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
               {!isLoggedIn && (
                 <Link
