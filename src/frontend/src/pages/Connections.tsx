@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { getFollowing, getResearchersByOrcidIds, unfollowResearcher } from "@/api/orcidApi";
+import { getFollowing, getResearchersByOrcidIds, getUserIdentity, unfollowResearcher } from "@/api/orcidApi";
 import { FollowingResearcher } from "@/types";
 import { getStoredOrcidId } from "@/utils/orcidAuth";
 import { toast } from "sonner";
 
 const Connections = () => {
+  const [followingIds, setFollowingIds] = useState<string[]>([]);
   const [following, setFollowing] = useState<FollowingResearcher[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,13 +17,19 @@ const Connections = () => {
       setLoading(true);
       try {
         const orcidIds = await getFollowing();
+        setFollowingIds(orcidIds);
         if (!orcidIds.length) {
           setFollowing([]);
           setLoading(false);
           return;
         }
+        // Busca em lote
         const researchers = await getResearchersByOrcidIds(orcidIds);
-        setFollowing(researchers);
+        // Para cada ID que não veio na resposta, cria um objeto mínimo
+        const foundIds = new Set(researchers.map((r: any) => r.orcidId));
+        const missingIds = orcidIds.filter(id => !foundIds.has(id));
+        const missingObjs = missingIds.map(id => ({ orcidId: id }));
+        setFollowing([...researchers, ...missingObjs]);
       } catch (err: any) {
         toast.error(err.message || "Failed to load following list");
         setFollowing([]);
@@ -42,6 +49,7 @@ const Connections = () => {
     try {
       await unfollowResearcher(myOrcidId, orcidId);
       setFollowing((prev) => prev.filter((r) => r.orcidId !== orcidId));
+      setFollowingIds((prev) => prev.filter((id) => id !== orcidId));
       toast.success("Unfollowed successfully.");
     } catch (err: any) {
       toast.error(err.message || "Failed to unfollow researcher");
@@ -67,6 +75,9 @@ const Connections = () => {
                   <div className="text-sm text-gray-600 mb-2">ORCID: {r.orcidId}</div>
                   {r.institutionName && (
                     <div className="text-sm text-gray-700">{r.institutionName}</div>
+                  )}
+                  {!r.name && (
+                    <div className="text-xs text-gray-400 mb-2">No public data found for this ORCID ID.</div>
                   )}
                   <Button
                     variant="outline"
