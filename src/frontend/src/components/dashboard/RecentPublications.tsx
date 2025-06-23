@@ -81,12 +81,6 @@ const RecentPublications = ({ publications, maxItems = 5 }: RecentPublicationsPr
             </div>
           )}
         </div>
-        
-        <div className="mt-6 flex justify-center">
-          <Link to="/publications">
-            <Button variant="outline">View all publications</Button>
-          </Link>
-        </div>
       </CardContent>
     </Card>
   );

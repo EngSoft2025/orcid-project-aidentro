@@ -350,4 +350,238 @@ export const testCitationAnalysis = async (yearsBack: number = 5) => {
     console.error('💥 Failed to test citation analysis:', error);
     throw error;
   }
+};
+
+// New search researchers function
+export interface SearchResearchersParams {
+  q: string;
+  rows?: number;
+  start?: number;
+}
+
+export interface SearchResearchersResponse {
+  success: boolean;
+  search_results: {
+    query: string;
+    total_results: number;
+    start: number;
+    rows: number;
+    results: Array<{
+      orcid_id: string;
+      orcid_uri: string;
+      given_names?: string;
+      family_name?: string;
+      credit_name?: string;
+      display_name: string;
+      current_affiliation?: string;
+      works_count?: number;
+      profile_url: string;
+      error?: string;
+    }>;
+  };
+  error?: string;
+}
+
+export const searchResearchers = async (params: SearchResearchersParams): Promise<SearchResearchersResponse> => {
+  try {
+    const queryParams = new URLSearchParams();
+    queryParams.append('q', params.q);
+    
+    if (params.rows) {
+      queryParams.append('rows', params.rows.toString());
+    }
+    
+    if (params.start) {
+      queryParams.append('start', params.start.toString());
+    }
+
+    const response = await fetch(`${BACKEND_URL}/api/search-researchers/?${queryParams}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error searching researchers:', error);
+    throw error;
+  }
+};
+
+// Researcher papers API
+export interface ResearcherPaper {
+  title: string;
+  type: string;
+  publication_year: number;
+  journal: string;
+  dois: string[];
+  url?: string;
+}
+
+export interface ResearcherPapersResponse {
+  success: boolean;
+  orcid_id: string;
+  total_works_found: number;
+  papers_returned: number;
+  format: string;
+  limit_applied: number;
+  papers: ResearcherPaper[];
+  statistics: {
+    total_papers: number;
+    papers_with_dois: number;
+    papers_with_journals: number;
+    publication_years: {
+      earliest: number;
+      latest: number;
+      total_years_active: number;
+    };
+    types: Record<string, number>;
+  };
+}
+
+export const getResearcherPapers = async (orcidId: string, limit: number = 50): Promise<ResearcherPapersResponse> => {
+  try {
+    const queryParams = new URLSearchParams({
+      orcid_id: orcidId,
+      limit: limit.toString(),
+    });
+
+    console.log('📄 Fetching researcher papers for ORCID ID:', orcidId);
+    
+    const response = await fetch(`${BACKEND_URL}/api/researcher-papers/?${queryParams}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Researcher papers received:', data);
+    
+    return data;
+  } catch (error) {
+    console.error('❌ Error fetching researcher papers:', error);
+    throw error;
+  }
+};
+
+// Social media accounts API
+export interface SocialMediaAccount {
+  platform: string;
+  username: string;
+  url: string;
+}
+
+export interface SocialMediaResponse {
+  success: boolean;
+  orcid_id: string;
+  social_media_accounts: SocialMediaAccount[];
+  total_accounts: number;
+  user_info: {
+    username: string;
+    display_name: string;
+    email: string;
+  };
+  error?: string;
+}
+
+export const getSocialMediaAccounts = async (orcidId: string): Promise<SocialMediaResponse> => {
+  try {
+    const queryParams = new URLSearchParams({
+      orcid_id: orcidId,
+    });
+
+    console.log('📱 Fetching social media accounts for ORCID ID:', orcidId);
+    
+    const response = await fetch(`${BACKEND_URL}/api/get-social-media/?${queryParams}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Social media accounts received:', data);
+    
+    return data;
+  } catch (error) {
+    console.error('❌ Error fetching social media accounts:', error);
+    throw error;
+  }
+};
+
+export interface AddSocialMediaRequest {
+  orcid_id: string;
+  platform: string;
+  username: string;
+  url?: string;
+}
+
+export interface AddSocialMediaResponse {
+  success: boolean;
+  action: 'added' | 'updated';
+  user_created: boolean;
+  orcid_id: string;
+  platform: string;
+  username: string;
+  url: string;
+  total_accounts: number;
+  all_accounts: SocialMediaAccount[];
+  user_info: {
+    username: string;
+    display_name: string;
+    email: string;
+  };
+  error?: string;
+}
+
+export const addSocialMediaAccount = async (orcidId: string, platform: string, username: string): Promise<AddSocialMediaResponse> => {
+  try {
+    const requestData: AddSocialMediaRequest = {
+      orcid_id: orcidId,
+      platform: platform,
+      username: username,
+    };
+
+    console.log('➕ Adding social media account:', requestData);
+    
+    const response = await fetch(`${BACKEND_URL}/api/add-social-media/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(requestData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Social media account added:', data);
+    
+    return data;
+  } catch (error) {
+    console.error('❌ Error adding social media account:', error);
+    throw error;
+  }
 }; 
