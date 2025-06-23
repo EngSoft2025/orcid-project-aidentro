@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import UserInfoModal from "@/components/UserInfoModal";
-import { getCurrentUserIdentity, getUserIdentity, UserIdentity } from "@/api/orcidApi";
+import { getCurrentUserIdentity, getUserIdentity, UserIdentity, initiateOrcidAuth } from "@/api/orcidApi";
 import { getStoredOrcidId, isOrcidAuthenticated } from "@/utils/orcidAuth";
 import {
   DropdownMenu,
@@ -246,36 +246,21 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/register" className="hidden md:block">
-                  <Button
-                    variant="outline"
-                    className="border-orcid-green text-orcid-green hover:bg-orcid-green hover:text-white"
-                  >
-                    Register
-                  </Button>
-                </Link>
-                <Link to="/signin">
-                  <Button className="bg-orcid-green hover:bg-orcid-green/90">
-                    <LogIn className="h-4 w-4 mr-2" />
-                    <span>Sign in</span>
-                  </Button>
-                </Link>
+                {/* Mobile menu button */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  {isMenuOpen ? (
+                    <X className="h-6 w-6" />
+                  ) : (
+                    <Menu className="h-6 w-6" />
+                  )}
+                </Button>
               </>
             )}
-
-            {/* Mobile menu button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </Button>
           </div>
         </div>
 
@@ -306,15 +291,6 @@ const Navbar = () => {
                   </Link>
                 )
               ))}
-              {!isLoggedIn && (
-                <Link
-                  to="/register"
-                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md md:hidden"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Register
-                </Link>
-              )}
               {isLoggedIn && (
                 <Link
                   to="/dashboard"
