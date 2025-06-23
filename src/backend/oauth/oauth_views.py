@@ -14,6 +14,7 @@ from django.db.models import Sum
 from config.models import User, CitationTimeSeries, Work
 from django.utils import timezone
 from datetime import datetime
+import concurrent.futures
 
 # Add import for our ORCID API client
 from integrations.orcid_api import ORCIDAPIClient
@@ -738,6 +739,11 @@ def search_researchers(request):
         if not search_results or not isinstance(search_results, dict):
             logger.warning(f"Invalid search results returned for query: {query}")
             search_results = {'num-found': 0, 'result': []}
+        
+        # Handle case where ORCID returns valid structure but no results
+        if search_results.get('num-found', 0) == 0:
+            logger.info(f"No researchers found for query: {query}")
+            search_results['result'] = []
         
         # Extract relevant information for easier frontend consumption
         formatted_results = {

@@ -1,7 +1,6 @@
 interface SearchFilters {
     query?: string;
     institution?: string;
-    country?: string;
     expertise?: string[];
     minPublications?: number;
     minCitations?: number;
@@ -79,15 +78,9 @@ interface SearchFilters {
       queryParts.push(`affiliation-org-name:${institutionQuery}`);
     }
     
-    // 3. Country filter - map country codes/names to ORCID format
-    if (filters.country && filters.country !== 'any') {
-      // Note: ORCID uses country codes, but frontend might use names
-      // You might need to map country names to ISO codes
-      const countryQuery = quoteIfNeeded(filters.country);
-      queryParts.push(`affiliation-org-country:${countryQuery}`);
-    }
     
-    // 4. Research areas/expertise - search in keywords and other relevant fields
+      
+      // 3. Research areas/expertise - search in keywords and other relevant fields
     if (filters.expertise && filters.expertise.length > 0) {
       const expertiseQueries = filters.expertise.map(area => {
         const escapedArea = quoteIfNeeded(area);
