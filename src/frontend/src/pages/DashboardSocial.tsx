@@ -171,20 +171,19 @@ const DashboardSocial = () => {
 
   return (
     <Layout>
-      <div className="px-4 py-8 md:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="px-2 py-4 sm:px-4 sm:py-8 md:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6 md:mb-8">
+          <div className="w-full">
+            <div className="flex flex-col gap-2 xs:flex-row xs:items-center xs:gap-3 mb-2">
               <Link to="/search">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="w-full xs:w-auto mb-2 xs:mb-0">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Search
                 </Button>
               </Link>
-              <h1 className="text-3xl font-bold text-gray-900">Researcher Profile</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">Researcher Profile</h1>
             </div>
-            
             <div className="mt-1 space-y-1">
               {loadingUser ? (
                 <div className="flex items-center space-x-2">
@@ -199,45 +198,37 @@ const DashboardSocial = () => {
                 </div>
               ) : (
                 <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <p className="text-gray-600 text-lg font-medium">
-                      {getDisplayName()}
-                    </p>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
+                    <p className="text-gray-600 text-lg font-medium">{getDisplayName()}</p>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1 sm:mt-0">
                       <User className="w-3 h-3 mr-1" />
                       Public Profile
                     </span>
                   </div>
-                  
                   {getDisplayInstitution() && (
                     <p className="text-sm text-gray-500">
                       {getDisplayInstitution()}
                       {userIdentity?.current_location && ` • ${userIdentity.current_location}`}
                     </p>
                   )}
-                  
-                  <p className="text-sm text-gray-500">
-                    ORCID ID: {orcidId}
-                  </p>
+                  <p className="text-sm text-gray-500 break-all">ORCID ID: {orcidId}</p>
                 </div>
               )}
             </div>
           </div>
-          
-          <div className="mt-4 md:mt-0 flex gap-2">
+          <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row md:gap-2 mt-2 md:mt-0">
             <Button
               variant="outline"
               onClick={handleRefreshCitations}
               disabled={loadingCitations}
-              className="flex items-center"
+              className="flex items-center w-full md:w-auto"
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${loadingCitations ? 'animate-spin' : ''}`} />
               {loadingCitations ? 'Loading...' : 'Refresh Citations'}
             </Button>
-            
             {userIdentity?.profile_url && (
               <Button
-                className="bg-orcid-green hover:bg-orcid-green/90"
+                className="bg-orcid-green hover:bg-orcid-green/90 w-full md:w-auto"
                 onClick={() => window.open(userIdentity.profile_url, '_blank')}
               >
                 <ExternalLink className="h-4 w-4 mr-2" />
@@ -248,7 +239,7 @@ const DashboardSocial = () => {
         </div>
 
         {/* Metrics Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-4">
           <MetricsCard
             title="Total Publications"
             value={citationMetrics?.publications_count || 0}
@@ -280,7 +271,7 @@ const DashboardSocial = () => {
 
         {/* Loading state for citation analysis */}
         {loadingCitations && (
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <div className="mt-6 sm:mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6">
             <div className="flex items-center space-x-3">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orcid-green"></div>
               <div>
@@ -297,7 +288,7 @@ const DashboardSocial = () => {
 
         {/* Citation error state */}
         {citationError && (
-          <div className="mt-8 bg-red-50 border border-red-200 rounded-lg p-6">
+          <div className="mt-6 sm:mt-8 bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6">
             <div className="flex items-center space-x-3">
               <div className="text-red-500">⚠️</div>
               <div>
@@ -313,13 +304,13 @@ const DashboardSocial = () => {
 
         {/* ORCID User Profile Section */}
         {userIdentity && (
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">ORCID Profile</h2>
+          <div className="mt-6 sm:mt-8">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">ORCID Profile</h2>
             <UserProfile userIdentity={userIdentity} />
           </div>
         )}
 
-        <div className="mt-8 grid gap-4 grid-cols-1 lg:grid-cols-4">
+        <div className="mt-6 sm:mt-8 grid gap-4 grid-cols-1 lg:grid-cols-4">
           <div className="lg:col-span-3 space-y-4">
             {/* Citation Chart */}
             <CitationChart
@@ -327,7 +318,6 @@ const DashboardSocial = () => {
               isLoading={loadingCitations}
               error={citationError || undefined}
             />
-            
             {/* Recent Publications */}
             <RecentPublications 
               publications={[]} 
@@ -335,7 +325,6 @@ const DashboardSocial = () => {
               isLoading={loadingPapers}
             />
           </div>
-          
           <div className="space-y-4">
             {/* Researcher Info Card */}
             <div className="bg-gray-50 rounded-xl p-4">
@@ -350,12 +339,10 @@ const DashboardSocial = () => {
                     <div className="text-gray-600 text-xs mt-1">{getDisplayInstitution()}</div>
                   )}
                 </div>
-                
                 <div className="bg-white p-3 rounded-lg border border-gray-100">
                   <div className="text-gray-600 text-xs">ORCID ID</div>
-                  <div className="font-mono text-xs text-gray-800">{orcidId}</div>
+                  <div className="font-mono text-xs text-gray-800 break-all">{orcidId}</div>
                 </div>
-                
                 {userIdentity?.current_location && (
                   <div className="bg-white p-3 rounded-lg border border-gray-100">
                     <div className="text-gray-600 text-xs">Location</div>
@@ -364,7 +351,6 @@ const DashboardSocial = () => {
                 )}
               </div>
             </div>
-
             {/* Actions */}
             <div className="bg-gray-50 rounded-xl p-4">
               <h3 className="text-sm font-medium mb-3">Actions</h3>
@@ -382,7 +368,6 @@ const DashboardSocial = () => {
                     </a>
                   </div>
                 )}
-                
                 <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                   <Link 
                     to="/search" 
@@ -392,7 +377,6 @@ const DashboardSocial = () => {
                     <ArrowLeft className="h-4 w-4" />
                   </Link>
                 </div>
-                
                 <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                   <Link 
                     to="/dashboard" 
@@ -406,8 +390,6 @@ const DashboardSocial = () => {
             </div>
           </div>
         </div>
-
-
       </div>
     </Layout>
   );

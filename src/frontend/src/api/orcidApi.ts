@@ -244,10 +244,29 @@ export const parseUrlParams = (url: string = window.location.href): Record<strin
   return params;
 };
 
+export interface CitationMetrics {
+  total_citations: number;
+  citation_trend: {
+    value: number;
+    isPositive: boolean;
+  } | null;
+  avg_citations_per_year: number;
+  h_index_approximation: number;
+  publications_count: number;
+  cited_publications_count: number;
+  citation_chart_data: Array<{
+    year: number;
+    citations: number;
+    cumulative_citations: number;
+  }>;
+  analysis_success: boolean;
+  error?: string;
+}
+
 /**
  * Get citation metrics for dashboard display
  */
-export const getCitationMetrics = async (orcidId: string) => {
+export const getCitationMetrics = async (orcidId: string): Promise<CitationMetrics> => {
   try {
     const response = await fetch(`${BACKEND_URL}/api/citation-metrics/?orcid_id=${encodeURIComponent(orcidId)}`, {
       method: 'GET',

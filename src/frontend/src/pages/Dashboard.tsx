@@ -388,7 +388,7 @@ const Dashboard = () => {
               )}
             </div>
           </div>
-          <div className="mt-4 md:mt-0 flex gap-2">
+          <div className="mt-4 md:mt-0 flex gap-2 flex-wrap w-full md:w-auto">
             <Button
               variant="outline"
               onClick={handleRefreshCitations}
@@ -434,7 +434,7 @@ const Dashboard = () => {
         </div>
 
         {/* Metrics Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 max-w-full">
           <MetricsCard
             title="Total Publications"
             value={displayMetrics?.publications_count || 0}
@@ -505,21 +505,25 @@ const Dashboard = () => {
           </div>
         )}
 
-        <div className="mt-8 grid gap-4 grid-cols-1 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 grid-cols-1 lg:grid-cols-4 max-w-full">
           <div className="lg:col-span-3 space-y-4">
             {/* Citation Chart */}
-            <CitationChart
-              citationData={displayMetrics?.citation_chart_data}
-              isLoading={isLoadingMetrics}
-              error={isAuthenticated ? (citationError || undefined) : undefined}
-            />
+            <div className="overflow-x-auto">
+              <CitationChart
+                citationData={displayMetrics?.citation_chart_data}
+                isLoading={isLoadingMetrics}
+                error={isAuthenticated ? (citationError || undefined) : undefined}
+              />
+            </div>
             
             {/* Recent Publications */}
-            <RecentPublications 
-              publications={[]} 
-              papers={displayPapers?.papers || []}
-              isLoading={isLoadingPapersDisplay}
-            />
+            <div className="overflow-x-auto">
+              <RecentPublications 
+                publications={[]} 
+                papers={displayPapers?.papers || []}
+                isLoading={isLoadingPapersDisplay}
+              />
+            </div>
           </div>
           
           <div className="space-y-4">

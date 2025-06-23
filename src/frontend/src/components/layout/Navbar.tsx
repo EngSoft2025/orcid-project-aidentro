@@ -1,18 +1,24 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import UserInfoModal from "@/components/UserInfoModal";
-import { getCurrentUserIdentity, getUserIdentity, UserIdentity } from "@/api/orcidApi";
-import { getStoredOrcidId, isOrcidAuthenticated, clearOrcidAuth } from "@/utils/orcidAuth";
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import UserInfoModal from "@/components/UserInfoModal"
+import {
+  getUserIdentity,
+  UserIdentity,
+} from "@/api/orcidApi"
+import {
+  getStoredOrcidId,
+  isOrcidAuthenticated,
+  clearOrcidAuth,
+} from "@/utils/orcidAuth"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   Bell,
-  Book,
   ChevronDown,
   LogIn,
   LogOut,
@@ -20,282 +26,327 @@ import {
   Search,
   User,
   X,
-} from "lucide-react";
-import { currentUser } from "@/data/mockData";
-import { isDebugMode, getDebugOrcidId } from '@/utils/debugConfig';
+} from "lucide-react"
+import { isDebugMode, getDebugOrcidId } from "@/utils/debugConfig"
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [userIdentity, setUserIdentity] = useState<UserIdentity | null>(null);
-  const isLoggedIn = isDebugMode() ? true : isOrcidAuthenticated();
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false)
+  const [mobileResearchersOpen, setMobileResearchersOpen] = useState(false)
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+  const [userIdentity, setUserIdentity] = useState<UserIdentity | null>(null)
+  const isLoggedIn = isDebugMode() ? true : isOrcidAuthenticated()
 
   const mainNavItems = [
-    { name: "Membership", href: "https://info.orcid.org/membership/" },
-    { name: "Documentation", href: "https://info.orcid.org/documentation/" },
-    { name: "News & Events", href: "https://info.orcid.org/news-events/" },
-    { name: "Resources", href: "/resources", hasDropdown: true },
-    { name: "For Researchers", href: "/researchers", hasDropdown: true },
-  ];
-
-  const researcherDropdownItems = [
-    { name: "Benefits", href: "https://info.orcid.org/researcher-faq/" },
-    { name: "Tools", href: "https://info.orcid.org/video-tutorials/" },
-  ];
+    { name: "Membership", href: "https://info.orcid.org/membership/", external: true },
+    { name: "Documentation", href: "https://info.orcid.org/documentation/", external: true },
+    { name: "News & Events", href: "https://info.orcid.org/news-events/", external: true },
+  ]
 
   const resourcesDropdownItems = [
-    { name: "FAQs", href: "/FAQ" },
-  ];
+    { name: "FAQs", href: "/faq", external: false },
+  ]
 
-  // Load user identity on component mount
+  const researcherDropdownItems = [
+    { name: "Benefits", href: "https://info.orcid.org/researcher-faq/", external: true },
+    { name: "Tools", href: "https://info.orcid.org/video-tutorials/", external: true },
+  ]
+
   useEffect(() => {
-    const loadUserIdentity = async () => {
-      if (isDebugMode()) {
+    const loadUser = async () => {
+      if (isLoggedIn) {
         try {
-          const identity = await getUserIdentity(getDebugOrcidId());
-          setUserIdentity(identity);
-        } catch (err) {
-          // Silently handle error
-        }
-      } else if (isLoggedIn) {
-        try {
-          const storedOrcidId = getStoredOrcidId();
-          if (storedOrcidId) {
-            const identity = await getUserIdentity(storedOrcidId);
-            identity.authenticated = true;
-            setUserIdentity(identity);
+          const id = isDebugMode() ? getDebugOrcidId() : getStoredOrcidId()
+          if (id) {
+            const identity = await getUserIdentity(id)
+            identity.authenticated = true
+            setUserIdentity(identity)
           }
-        } catch (error) {
-          // Silently handle error - user can still click to try again
+        } catch {
+          // ignore
         }
       }
-    };
-
-    loadUserIdentity();
-  }, [isLoggedIn]);
+    }
+    loadUser()
+  }, [isLoggedIn])
 
   return (
     <nav className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-full bg-orcid-green flex items-center justify-center">
-              <span className="font-bold text-white">ID</span>
-            </div>
-            <span className="font-bold text-xl hidden md:block">ORSync</span>
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* logo */}
+        <Link to="/" className="flex items-center space-x-2">
+          <div className="h-8 w-8 rounded-full bg-orcid-green flex items-center justify-center">
+            <span className="font-bold text-white">ID</span>
+          </div>
+          <span className="font-bold text-xl hidden md:block">ORSync</span>
+        </Link>
+
+        {/* desktop menu */}
+        <div className="hidden lg:flex items-center space-x-6">
+          {mainNavItems.map((item) =>
+            item.external ? (
+              <a
+                key={item.name}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-700 hover:text-orcid-green font-medium"
+              >
+                {item.name}
+              </a>
+            ) : (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="text-gray-700 hover:text-orcid-green font-medium"
+              >
+                {item.name}
+              </Link>
+            ),
+          )}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="flex items-center space-x-1">
+                <span className="text-gray-700 hover:text-orcid-green">Resources</span>
+                <ChevronDown className="h-4 w-4 text-gray-500" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center">
+              {resourcesDropdownItems.map((sub) => (
+                <DropdownMenuItem key={sub.name} asChild>
+                  {sub.external ? (
+                    <a
+                      href={sub.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full"
+                    >
+                      {sub.name}
+                    </a>
+                  ) : (
+                    <Link to={sub.href} className="w-full">
+                      {sub.name}
+                    </Link>
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="flex items-center space-x-1">
+                <span className="text-gray-700 hover:text-orcid-green">For Researchers</span>
+                <ChevronDown className="h-4 w-4 text-gray-500" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center">
+              {researcherDropdownItems.map((sub) => (
+                <DropdownMenuItem key={sub.name} asChild>
+                  <a
+                    href={sub.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full"
+                  >
+                    {sub.name}
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* actions */}
+        <div className="flex items-center space-x-3">
+          <Link to="/search" className="text-gray-600 hover:text-orcid-green">
+            <Search className="h-5 w-5" />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center">
-            {/* Links sem dropdown */}
-            <div className="flex items-center space-x-6">
-              {mainNavItems
-                .filter((item) => !item.hasDropdown)
-                .map((item) => (
+          {isLoggedIn && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileResourcesOpen(false)} // reuse for notification
+                className="p-2"
+                title="Notifications"
+              >
+                <Bell className="h-5 w-5 text-gray-600 hover:text-orcid-green" />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsUserModalOpen(true)}
+                className="p-2"
+                title="Profile"
+              >
+                <User className="h-5 w-5 text-gray-600 hover:text-orcid-green" />
+              </Button>
+
+              <Link to="/dashboard">
+                <Button variant="ghost" className="py-1 px-3">
+                  <span className="hidden md:block">Dashboard</span>
+                  <span className="md:hidden">Dash</span>
+                </Button>
+              </Link>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  clearOrcidAuth()
+                  window.location.reload()
+                }}
+                className="p-2"
+                title="Logout"
+              >
+                <LogOut className="h-5 w-5 text-gray-600 hover:text-orcid-green" />
+              </Button>
+            </>
+          )}
+
+          {!isLoggedIn && (
+            <Link to="/login">
+              <Button variant="ghost" size="icon" className="p-2" title="Login">
+                <LogIn className="h-5 w-5 text-gray-600 hover:text-orcid-green" />
+              </Button>
+            </Link>
+          )}
+
+          {/* mobile toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
+        </div>
+      </div>
+
+      {/* mobile menu */}
+      {isMenuOpen && (
+        <div className="lg:hidden border-t border-gray-200 mt-2 pb-4">
+          <ul className="space-y-1 px-2">
+            {mainNavItems.map((item) => (
+              <li key={item.name}>
+                {item.external ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-orcid-green"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
                   <Link
-                    key={item.name}
                     to={item.href}
-                    className="text-gray-700 hover:text-orcid-green font-medium"
+                    className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-orcid-green"
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
                   </Link>
-                ))}
-            </div>
+                )}
+              </li>
+            ))}
 
-            {/* Divisória */}
-            <div className="border-l border-gray-300 h-6 mx-4"></div>
-
-            {/* Itens com dropdown */}
-            <div className="flex items-center space-x-3">
-              {mainNavItems
-                .filter((item) => item.hasDropdown)
-                .map((item) => (
-                  <DropdownMenu key={item.name}>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="flex items-center space-x-1 text-gray-700 hover:text-orcid-green"
-                      >
-                        <span>{item.name}</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center" className="bg-white">
-                      {item.name === "For Researchers"
-                        ? researcherDropdownItems.map((subItem) => (
-                            <DropdownMenuItem key={subItem.name} asChild>
-                              <Link
-                                to={subItem.href}
-                                className="w-full cursor-pointer"
-                              >
-                                {subItem.name}
-                              </Link>
-                            </DropdownMenuItem>
-                          ))
-                        : resourcesDropdownItems.map((subItem) => (
-                            <DropdownMenuItem key={subItem.name} asChild>
-                              <Link
-                                to={subItem.href}
-                                className="w-full cursor-pointer"
-                              >
-                                {subItem.name}
-                              </Link>
-                            </DropdownMenuItem>
-                          ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ))}
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center space-x-3">
-            <Link to="/search" className="text-gray-600 hover:text-orcid-green">
-              <Search className="h-5 w-5" />
-            </Link>
-
-            {isLoggedIn ? (
-              <>
-                <div className="hidden sm:flex items-center space-x-2">
-                  {/* User Profile Modal Button */}
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className="p-2"
-                    onClick={async () => {
-                      if (isDebugMode()) {
-                        try {
-                          const identity = await getUserIdentity(getDebugOrcidId());
-                          setUserIdentity(identity);
-                        } catch (err) {
-                          setUserIdentity({
-                            orcid_id: 'Unknown',
-                            name: 'Unknown User',
-                            email: undefined,
-                            current_affiliation: undefined,
-                            current_location: undefined,
-                            profile_url: 'https://orcid.org',
-                            authenticated: false
-                          });
-                        }
-                      } else {
-                        try {
-                          const storedOrcidId = getStoredOrcidId();
-                          if (storedOrcidId && isOrcidAuthenticated()) {
-                            const identity = await getUserIdentity(storedOrcidId);
-                            identity.authenticated = true;
-                            setUserIdentity(identity);
-                          } else {
-                            setUserIdentity({
-                              orcid_id: 'Unknown',
-                              name: 'Unknown User',
-                              email: undefined,
-                              current_affiliation: undefined,
-                              current_location: undefined,
-                              profile_url: 'https://orcid.org',
-                              authenticated: false
-                            });
-                          }
-                        } catch (error) {
-                          setUserIdentity({
-                            orcid_id: 'Unknown',
-                            name: 'Unknown User',
-                            email: undefined,
-                            current_affiliation: undefined,
-                            current_location: undefined,
-                            profile_url: 'https://orcid.org',
-                            authenticated: false
-                          });
-                        }
-                      }
-                      setIsUserModalOpen(true);
-                    }}
-                  >
-                    <User className="h-5 w-5" />
-                  </Button>
-                  {/* Dashboard Link Button */}
-                  <Link to="/dashboard">
-                    <Button variant="ghost" className="py-1 px-3">
-                      <span className="hidden md:block">Dashboard</span>
-                      <span className="md:hidden">Dash</span>
-                    </Button>
-                  </Link>
-                  {/* Logout Button */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="p-2"
-                    title="Logout"
-                    onClick={() => {
-                      clearOrcidAuth();
-                      window.location.reload();
-                    }}
-                  >
-                    <LogOut className="h-5 w-5" />
-                  </Button>
-                </div>
-              </>
-            ) : null}
-
-            {/* Mobile menu button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
+            <li>
+              <button
+                onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
+                className="w-full flex justify-between items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-50 hover:text-orcid-green"
+              >
+                Resources <ChevronDown className="h-4 w-4" />
+              </button>
+              {mobileResourcesOpen && (
+                <ul className="mt-1 ml-4 space-y-1">
+                  {resourcesDropdownItems.map((sub) => (
+                    <li key={sub.name}>
+                      {sub.external ? (
+                        <a
+                          href={sub.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block px-3 py-1 text-gray-600 hover:bg-gray-50 hover:text-orcid-green rounded-md"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {sub.name}
+                        </a>
+                      ) : (
+                        <Link
+                          to={sub.href}
+                          className="block px-3 py-1 text-gray-600 hover:bg-gray-50 hover:text-orcid-green rounded-md"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {sub.name}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
               )}
-            </Button>
-          </div>
-        </div>
+            </li>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="mt-3 py-2 border-t lg:hidden">
-            <div className="space-y-2 pt-2 pb-3">
-              {mainNavItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              {isLoggedIn && (
-                <>
+            <li>
+              <button
+                onClick={() => setMobileResearchersOpen(!mobileResearchersOpen)}
+                className="w-full flex justify-between items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-50 hover:text-orcid-green"
+              >
+                For Researchers <ChevronDown className="h-4 w-4" />
+              </button>
+              {mobileResearchersOpen && (
+                <ul className="mt-1 ml-4 space-y-1">
+                  {researcherDropdownItems.map((sub) => (
+                    <li key={sub.name}>
+                      <a
+                        href={sub.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block px-3 py-1 text-gray-600 hover:bg-gray-50 hover:text-orcid-green rounded-md"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {sub.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+
+            {isLoggedIn && (
+              <>
+                <li>
                   <Link
                     to="/dashboard"
-                    className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md sm:hidden"
+                    className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50 hover:text-orcid-green"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Dashboard
                   </Link>
-                  {/* Logout Button (Mobile) */}
+                </li>
+                <li>
                   <button
-                    className="w-full flex items-center gap-2 px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-orcid-green rounded-md"
                     onClick={() => {
-                      clearOrcidAuth();
-                      window.location.reload();
+                      clearOrcidAuth()
+                      window.location.reload()
                     }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-gray-700 rounded-md hover:bg-gray-50 hover:text-orcid-green"
                   >
-                    <LogOut className="h-5 w-5" />
-                    Logout
+                    <LogOut className="h-5 w-5" /> Logout
                   </button>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      )}
 
-            {/* User Info Modal */}
+      {/* user info modal */}
       {isUserModalOpen && userIdentity && (
         <UserInfoModal
           isOpen={isUserModalOpen}
@@ -303,10 +354,8 @@ const Navbar = () => {
           userIdentity={userIdentity}
         />
       )}
+    </nav>
+  )
+}
 
-
-      </nav>
-  );
-};
-
-export default Navbar;
+export default Navbar

@@ -26,6 +26,8 @@ import {
   getUserIdentity,
   UserIdentity,
   initiateOrcidAuth,
+  getCitationMetrics,
+  CitationMetrics,
 } from "@/api/orcidApi";
 import { toast } from "sonner";
 import Layout from "@/components/layout/Layout";
@@ -34,6 +36,8 @@ const Home = () => {
   const navigate = useNavigate();
   const [userIdentity, setUserIdentity] = useState<UserIdentity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [citationMetrics, setCitationMetrics] = useState<CitationMetrics | null>(null);
+  const [isMetricsLoading, setIsMetricsLoading] = useState(false);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -60,6 +64,23 @@ const Home = () => {
 
     checkAuthentication();
   }, [navigate]);
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      if (userIdentity && userIdentity.orcid_id) {
+        setIsMetricsLoading(true);
+        try {
+          const metrics = await getCitationMetrics(userIdentity.orcid_id);
+          setCitationMetrics(metrics);
+        } catch (error) {
+          setCitationMetrics(null);
+        } finally {
+          setIsMetricsLoading(false);
+        }
+      }
+    };
+    fetchMetrics();
+  }, [userIdentity]);
 
   const handleOrcidSignIn = () => {
     toast.info("Redirecting to ORCID...");
@@ -294,7 +315,7 @@ const Home = () => {
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 md:p-6 text-center">
                   <BookOpen className="h-6 w-6 md:h-8 md:w-8 text-blue-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-blue-600">
-                    0
+                    {isMetricsLoading ? '...' : citationMetrics?.publications_count ?? 0}
                   </p>
                   <p className="text-xs md:text-sm text-blue-700">
                     Publications
@@ -302,30 +323,30 @@ const Home = () => {
                 </div>
 
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 md:p-6 text-center">
-                  <Users className="h-6 w-6 md:h-8 md:w-8 text-green-600 mx-auto mb-2" />
+                  <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-green-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-green-600">
-                    0
+                    {isMetricsLoading ? '...' : citationMetrics?.total_citations ?? 0}
                   </p>
                   <p className="text-xs md:text-sm text-green-700">
-                    Connections
+                    Citations
                   </p>
                 </div>
 
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 md:p-6 text-center">
-                  <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-purple-600 mx-auto mb-2" />
+                  <Shield className="h-6 w-6 md:h-8 md:w-8 text-purple-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-purple-600">
-                    0
+                    {isMetricsLoading ? '...' : (citationMetrics?.h_index_approximation ?? 'N/A')}
                   </p>
-                  <p className="text-xs md:text-sm text-purple-700">Quotes</p>
+                  <p className="text-xs md:text-sm text-purple-700">h-index (approx)</p>
                 </div>
 
                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 md:p-6 text-center">
-                  <Shield className="h-6 w-6 md:h-8 md:w-8 text-orange-600 mx-auto mb-2" />
+                  <Users className="h-6 w-6 md:h-8 md:w-8 text-orange-600 mx-auto mb-2" />
                   <p className="text-xl md:text-2xl font-bold text-orange-600">
-                    100%
+                    {isMetricsLoading ? '...' : (citationMetrics?.avg_citations_per_year ?? 0)}
                   </p>
                   <p className="text-xs md:text-sm text-orange-700">
-                    Full Profile
+                    Avg. Citations/Year
                   </p>
                 </div>
               </div>
