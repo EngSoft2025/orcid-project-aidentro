@@ -23,7 +23,7 @@ O projeto está atualmente disponível num [link público](https://aidentro.verc
 - Utilizamos **Issues, Pull Requests, Projects e Insights** para controlar tarefas, revisões e entregas.
 - A branch principal de desenvolvimento é `dev`, e a branch `main` contém versões estáveis e demonstráveis.
 - Diagramas, atas e outros documentos podem ser acessados dentro de `docs/`, organizados por tema.
-
+ 
 
 ## 🧑‍💻 Equipe
 
