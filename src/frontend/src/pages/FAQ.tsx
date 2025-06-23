@@ -23,11 +23,7 @@ import {
   Shield, 
   Settings,
   Search,
-  User,
-  FileText,
-  Globe,
-  Mail,
-  Phone
+  FileText
 } from "lucide-react";
 
 const FAQ = () => {
@@ -147,25 +143,27 @@ const FAQ = () => {
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <section className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div className="text-center">
-              <div className="flex items-center justify-center space-x-3 mb-6">
-                <HelpCircle className="h-12 w-12 text-orcid-green" />
-                <h1 className="text-4xl font-bold text-gray-900">Frequently Asked Questions</h1>
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <HelpCircle className="h-10 w-10 text-orcid-green" />
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                  Frequently Asked Questions
+                </h1>
               </div>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                 Find answers to the most common questions about ORCID and our platform.
-                If you can't find what you're looking for, contact us.
+                If you can&apos;t find what you&apos;re looking for, contact us.
               </p>
             </div>
           </div>
         </section>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar - Categories */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-8">
+              <Card className="relative lg:sticky lg:top-8">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Settings className="h-5 w-5" />
@@ -173,12 +171,12 @@ const FAQ = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
+                  <div className="flex overflow-x-auto space-x-2 lg:flex-col lg:space-x-0 lg:space-y-2 lg:overflow-visible">
                     {categories.map((category) => (
                       <Button
                         key={category.id}
                         variant={activeCategory === category.id ? "default" : "ghost"}
-                        className="w-full justify-start"
+                        className="flex-shrink-0 justify-start whitespace-nowrap"
                         onClick={() => setActiveCategory(category.id)}
                       >
                         {category.icon}
@@ -199,7 +197,8 @@ const FAQ = () => {
                     <span>{categories.find(c => c.id === activeCategory)?.name}</span>
                   </CardTitle>
                   <CardDescription>
-                    Frequently asked questions about {categories.find(c => c.id === activeCategory)?.name.toLowerCase()}
+                    Frequently asked questions about{" "}
+                    {categories.find(c => c.id === activeCategory)?.name.toLowerCase()}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -221,7 +220,7 @@ const FAQ = () => {
 
             {/* Sidebar - Useful Links */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-8">
+              <Card className="relative lg:sticky lg:top-8">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <ExternalLink className="h-5 w-5" />
@@ -236,7 +235,7 @@ const FAQ = () => {
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block p-3 rounded-lg border border-gray-200 hover:border-orcid-green hover:bg-orcid-green/5 transition-all duration-200"
+                        className="block p-3 rounded-lg border border-gray-200 hover:border-orcid-green hover:bg-orcid-green/5 transition"
                       >
                         <div className="flex items-start space-x-3">
                           <div className="text-orcid-green mt-0.5">
@@ -264,4 +263,4 @@ const FAQ = () => {
   );
 };
 
-export default FAQ; 
+export default FAQ;
