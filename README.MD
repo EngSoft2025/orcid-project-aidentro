@@ -5,7 +5,7 @@ Este repositório contém toda a organização do trabalho da disciplina **Engen
 Nosso objetivo é desenvolver uma aplicação baseada na [API pública do ORCID](https://orcid.org), buscando melhorar a usabilidade e a visualização dos dados de pesquisadores, conforme requisitos levantados com docentes do ICMC.
 
 ## Website
-
+ 
 O projeto está atualmente disponível num [link público](https://aidentro.vercel.app/), com o front-end deployado na Vercel e o Back-end deployado no Render.
  
 ## 📁 Estrutura do Repositório
