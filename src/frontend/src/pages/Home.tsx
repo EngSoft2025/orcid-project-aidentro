@@ -10,19 +10,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { 
-  Search, 
-  Users, 
-  User, 
-  Shield, 
-  BookOpen, 
+import {
+  Search,
+  Users,
+  User,
+  Shield,
+  BookOpen,
   TrendingUp,
   ArrowRight,
-  Home as HomeIcon
+  Home as HomeIcon,
 } from "lucide-react";
 import { isOrcidAuthenticated, getStoredOrcidId } from "@/utils/orcidAuth";
 import { isDebugMode, getDebugOrcidId } from "@/utils/debugConfig";
-import { getUserIdentity, UserIdentity, initiateOrcidAuth } from "@/api/orcidApi";
+import {
+  getUserIdentity,
+  UserIdentity,
+  initiateOrcidAuth,
+} from "@/api/orcidApi";
 import { toast } from "sonner";
 import Layout from "@/components/layout/Layout";
 
@@ -59,7 +63,7 @@ const Home = () => {
 
   const handleOrcidSignIn = () => {
     toast.info("Redirecting to ORCID...");
-    initiateOrcidAuth('/authenticate');
+    initiateOrcidAuth("/authenticate");
   };
 
   if (isLoading) {
@@ -85,7 +89,7 @@ const Home = () => {
               <HomeIcon className="h-8 w-8 text-orcid-green" />
               <h1 className="text-3xl font-bold text-gray-900">Home</h1>
             </div>
-            
+
             {userIdentity ? (
               <div className="bg-gradient-to-r from-orcid-green/10 to-orcid-green/5 rounded-lg p-6">
                 <div className="flex items-center space-x-4">
@@ -96,7 +100,9 @@ const Home = () => {
                     <h2 className="text-xl font-semibold text-gray-900">
                       Welcome, {userIdentity.name}!
                     </h2>
-                    <p className="text-gray-600">ORCID: {userIdentity.orcid_id}</p>
+                    <p className="text-gray-600">
+                      ORCID: {userIdentity.orcid_id}
+                    </p>
                     {userIdentity.current_affiliation && (
                       <p className="text-sm text-gray-500">
                         {userIdentity.current_affiliation}
@@ -112,10 +118,11 @@ const Home = () => {
                     Welcome to the ORCID Platform
                   </h2>
                   <p className="text-gray-600 mb-6">
-                    Connect with your researcher identity and explore the global research network
+                    Connect with your researcher identity and explore the global
+                    research network
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button 
+                    <Button
                       className="bg-orcid-green hover:bg-green-600 text-white px-6 py-2"
                       onClick={handleOrcidSignIn}
                     >
@@ -144,7 +151,8 @@ const Home = () => {
                   What would you like to do?
                 </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                  Access your connections, manage your profile, or explore researchers on the ORCID platform.
+                  Access your connections, manage your profile, or explore
+                  researchers on the ORCID platform.
                 </p>
               </div>
 
@@ -162,7 +170,8 @@ const Home = () => {
                   </CardHeader>
                   <CardContent className="text-center flex-grow flex flex-col">
                     <p className="text-gray-600 mb-6 flex-grow">
-                      View your connections with other researchers, institutions, and research projects.
+                      View your connections with other researchers,
+                      institutions, and research projects.
                     </p>
                     <Link to="/connections" className="mt-auto">
                       <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
@@ -187,7 +196,8 @@ const Home = () => {
                   </CardHeader>
                   <CardContent className="text-center flex-grow flex flex-col">
                     <p className="text-gray-600 mb-6 flex-grow">
-                      Access and edit your ORCID profile, publications, affiliations, and other professional information.
+                      Access and edit your ORCID profile, publications,
+                      affiliations, and other professional information.
                     </p>
                     <Link to="/dashboard" className="mt-auto">
                       <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
@@ -212,7 +222,8 @@ const Home = () => {
                   </CardHeader>
                   <CardContent className="text-center flex-grow flex flex-col">
                     <p className="text-gray-600 mb-6 flex-grow">
-                      Search for researchers, publications, and institutions in the ORCID database.
+                      Search for researchers, publications, and institutions in
+                      the ORCID database.
                     </p>
                     <Link to="/search" className="mt-auto">
                       <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
@@ -252,7 +263,8 @@ const Home = () => {
                   </CardHeader>
                   <CardContent className="text-center flex-grow flex flex-col">
                     <p className="text-gray-600 mb-6 flex-grow">
-                      Search for researchers, publications, and institutions in the ORCID database.
+                      Search for researchers, publications, and institutions in
+                      the ORCID database.
                     </p>
                     <Link to="/search" className="mt-auto">
                       <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
@@ -274,33 +286,47 @@ const Home = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-8">
                 <h3 className="text-xl font-semibold text-gray-900">
-                  Resumo da Sua Atividade
+                  Summary of Your Activity
                 </h3>
               </div>
-              
+
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 md:p-6 text-center">
                   <BookOpen className="h-6 w-6 md:h-8 md:w-8 text-blue-600 mx-auto mb-2" />
-                  <p className="text-xl md:text-2xl font-bold text-blue-600">0</p>
-                  <p className="text-xs md:text-sm text-blue-700">Publicações</p>
+                  <p className="text-xl md:text-2xl font-bold text-blue-600">
+                    0
+                  </p>
+                  <p className="text-xs md:text-sm text-blue-700">
+                    Publications
+                  </p>
                 </div>
-                
+
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 md:p-6 text-center">
                   <Users className="h-6 w-6 md:h-8 md:w-8 text-green-600 mx-auto mb-2" />
-                  <p className="text-xl md:text-2xl font-bold text-green-600">0</p>
-                  <p className="text-xs md:text-sm text-green-700">Conexões</p>
+                  <p className="text-xl md:text-2xl font-bold text-green-600">
+                    0
+                  </p>
+                  <p className="text-xs md:text-sm text-green-700">
+                    Connections
+                  </p>
                 </div>
-                
+
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 md:p-6 text-center">
                   <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-purple-600 mx-auto mb-2" />
-                  <p className="text-xl md:text-2xl font-bold text-purple-600">0</p>
-                  <p className="text-xs md:text-sm text-purple-700">Citações</p>
+                  <p className="text-xl md:text-2xl font-bold text-purple-600">
+                    0
+                  </p>
+                  <p className="text-xs md:text-sm text-purple-700">Quotes</p>
                 </div>
-                
+
                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 md:p-6 text-center">
                   <Shield className="h-6 w-6 md:h-8 md:w-8 text-orange-600 mx-auto mb-2" />
-                  <p className="text-xl md:text-2xl font-bold text-orange-600">100%</p>
-                  <p className="text-xs md:text-sm text-orange-700">Perfil Completo</p>
+                  <p className="text-xl md:text-2xl font-bold text-orange-600">
+                    100%
+                  </p>
+                  <p className="text-xs md:text-sm text-orange-700">
+                    Full Profile
+                  </p>
                 </div>
               </div>
             </div>
@@ -313,21 +339,30 @@ const Home = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4 lg:space-x-6">
                 <Link to="/dashboard" className="w-full sm:w-auto">
-                  <Button variant="outline" className="w-full sm:w-auto border-orcid-green text-orcid-green hover:bg-orcid-green hover:text-white">
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto border-orcid-green text-orcid-green hover:bg-orcid-green hover:text-white"
+                  >
                     <TrendingUp className="h-4 w-4 mr-2" />
                     Dashboard
                   </Button>
                 </Link>
-                
+
                 <Link to="/dashboard" className="w-full sm:w-auto">
-                  <Button variant="outline" className="w-full sm:w-auto border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white">
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white"
+                  >
                     <User className="h-4 w-4 mr-2" />
-                    Meu Perfil
+                    My Profile
                   </Button>
                 </Link>
-                
+
                 <Link to="/search" className="w-full sm:w-auto">
-                  <Button variant="outline" className="w-full sm:w-auto border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white">
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white"
+                  >
                     <Search className="h-4 w-4 mr-2" />
                     Search
                   </Button>

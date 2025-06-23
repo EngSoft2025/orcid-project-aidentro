@@ -83,7 +83,7 @@ const Navbar = () => {
             <div className="h-8 w-8 rounded-full bg-orcid-green flex items-center justify-center">
               <span className="font-bold text-white">ID</span>
             </div>
-            <span className="font-bold text-xl hidden md:block">ORCID</span>
+            <span className="font-bold text-xl hidden md:block">ORSync</span>
           </Link>
 
           {/* Desktop Navigation */}
