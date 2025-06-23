@@ -725,10 +725,19 @@ def search_researchers(request):
         
       
         # Create ORCID API client for search
-        client = ORCIDAPIClient(orcid_id="0000-0000-0000-0000")
+        # Use verify_ssl=False for development/testing environments to avoid SSL issues
+        client = ORCIDAPIClient(orcid_id="0000-0000-0000-0000", verify_ssl=False)
         
         # Perform the search
+        print("&&&&&&&&&&")
+
         search_results = client.search_researchers(query=query, rows=rows, start=start)
+        print("-------- ",search_results)
+        
+        # Ensure search_results is not None and has expected structure
+        if not search_results or not isinstance(search_results, dict):
+            logger.warning(f"Invalid search results returned for query: {query}")
+            search_results = {'num-found': 0, 'result': []}
         
         # Extract relevant information for easier frontend consumption
         formatted_results = {
@@ -831,11 +840,15 @@ def search_researchers(request):
                     'error': str(e)
                 }
 
-        # Get all search results
-        search_result_list = search_results.get('result', [])
+        # Get all search results - handle None case
+        search_result_list = search_results.get('result', []) if search_results else []
+        
+        # Ensure search_result_list is not None
+        if search_result_list is None:
+            search_result_list = []
         
         # Use ThreadPoolExecutor for concurrent profile fetching
-        max_workers = min(len(search_result_list), 8)  # Limit concurrent threads to avoid overwhelming ORCID API
+        max_workers = min(len(search_result_list), 8) if search_result_list else 1  # Limit concurrent threads to avoid overwhelming ORCID API
         
         if search_result_list:
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -882,6 +895,7 @@ def search_researchers(request):
         
     except Exception as e:
         logger.error(f"Error searching researchers: {str(e)}")
+        print(f"Error searching researchers: {str(e)}")
         return JsonResponse({
             'error': 'Failed to search researchers',
             'details': str(e),
