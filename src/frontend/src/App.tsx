@@ -14,6 +14,7 @@ import AuthSuccess from "./pages/AuthSuccess";
 import AuthError from "./pages/AuthError";
 import OrcidTest from "./pages/OrcidTest";
 import CitationTestDashboard from "./pages/CitationTestDashboard";
+import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,9 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/search" element={<Search />} />
           <Route path="/connections" element={<Home />} />
+          
+          {/* Resources */}
+          <Route path="/resources/faqs" element={<FAQ />} />
           
           {/* Auth callback routes */}
           <Route path="/auth/success" element={<AuthSuccess />} />
